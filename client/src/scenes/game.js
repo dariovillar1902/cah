@@ -8,6 +8,13 @@ import Dealer from '../helpers/dealer.js';
 
 import WebFontFile from '../helpers/WebFontFile';
 
+var text;
+var timedEvent;
+
+function onEvent() {
+    timedEvent.remove();
+}
+
 export default class Game extends Phaser.Scene {
     constructor() {
         super({
@@ -21,13 +28,35 @@ export default class Game extends Phaser.Scene {
         this.load.image('magentaCardFront', 'src/assets/MagentaCardFront.png');
         this.load.image('magentaCardBack', 'src/assets/MagentaCardBack.png');
         this.load.html('cartaBlanca', 'src/assets/cartablanca.html');
-        this.load.addFile(new WebFontFile(this.load, 'Work Sans'))
+        this.load.addFile(new WebFontFile(this.load, 'Work Sans'));
+        // timer.loop(2000, updateCounter, this);
+        // timer.start();
     }
 
     create() {
-        
-        var cartaNegraHTML = `<div style='background-color: black; color: white; border: 1px solid white; border-radius: 1em; width: 14.88em; height: 20.78em; display: flex; align-items: center;'> <p style='text-align: center; font-family: "Work Sans"; font-weight: bold; font-size: 4em; vertical-align: middle; margin: auto !important;'> HDP </p> </div>`;
-
+        var indiceCartaNegra = Phaser.Math.Between(0, 5);
+        var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora prohibe _________ en los aviones.", 
+        "Es una pena que hoy en día los jóvenes se están metiendo con _________.", 
+        "En 1000 años, cuando el papel moneda sea una memoria distante, _________ va a ser nuestra moneda.", 
+        "La Asociación de Fútbol Argentino ha prohibido _________ por dar a los jugadores una ventaja injusta.", 
+        "¿Cuál es el placer culposo de Batman?", 
+        "Lo nuevo de JK Rowling: Harry Potter y la Cámara de _________."];
+        timedEvent = this.time.delayedCall(60000, onEvent);
+        var cartaNegraElegida = `<div style='
+                background-color: black;
+                color: white;
+                border: 1px solid white;
+                border-radius: 1em;
+                width: 14.88em;
+                height: 20.78em;'> <p id="texto" style='
+                padding: .5em 1.5em 1em 1.5em;
+                font-family: sans-serif;
+                font-weight: bold;
+                font-size: 1.3em;
+                line-height: 1.3em;'> La normativa de la Secretaria de Transporte ahora prohibe _________ en los aviones. </p> </div>`;
+        var cartaNegraFinal = this.add.dom(400, 375).createFromHTML(cartaNegraElegida).setScale(0.7, 0.7);
+        cartaNegraFinal.node.children[0].children[0].innerText = arrayCartasNegras[indiceCartaNegra];
+        text = this.add.text(55, 55, "60", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         this.isPlayerA = false;
         this.opponentCards = [];
 
@@ -42,6 +71,8 @@ export default class Game extends Phaser.Scene {
         this.socket.on('dealCards', function () {
             self.dealer.dealCards();
             self.dealText.disableInteractive();
+            // timer.start();
+            
         })
 
         this.socket.on('cardPlayed', function (gameObject, isPlayerA) {
@@ -96,7 +127,7 @@ export default class Game extends Phaser.Scene {
 
         this.input.on('drop', function (pointer, gameObject, dropZone) {
             dropZone.data.values.cards++;
-            gameObject.x = (dropZone.x - 350) + (dropZone.data.values.cards * 50);
+            gameObject.x = (dropZone.x - 50) + (dropZone.data.values.cards * 50);
             gameObject.y = dropZone.y;
             gameObject.disableInteractive();
             self.socket.emit('cardPlayed', gameObject, self.isPlayerA);
@@ -105,6 +136,17 @@ export default class Game extends Phaser.Scene {
     }
     
     update() {
-    
+        // text.setText('Event.progress: ' + timedEvent.getProgress().toString().substr(0, 4));
+        var cantidadSegundos = timedEvent.getProgress() * 60;
+        var segundosRestantes = 60 - cantidadSegundos;
+        if (segundosRestantes > 10) {
+            text.setText(segundosRestantes.toString().substr(0, 2));
+        } else if (segundosRestantes > 0 && segundosRestantes < 10) {
+            text.setText(segundosRestantes.toString().substr(0, 1));
+        } else if (segundosRestantes = 0) {
+            timedEvent.paused = true;
+        }
     }
+
+
 }
