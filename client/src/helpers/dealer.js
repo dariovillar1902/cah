@@ -6,18 +6,68 @@ export default class Dealer {
             let playerSprite;
             let opponentSprite;
             if (scene.isPlayerA) {
-                playerSprite = 'cyanCardFront';
-                opponentSprite = 'magentaCardBack';
+                playerSprite = `<div style='
+                background-color: white;
+                color: black;
+                border: 1px solid black;
+                border-radius: 1em;
+                width: 14.88em;
+                height: 20.78em;'> <p id="texto" style='
+                padding: .5em 1.5em 1em 1.5em;
+                font-family: sans-serif;
+                font-weight: bold;
+                font-size: 1.3em;
+                line-height: 1.3em;'> Una maldición gitana. </p> </div>`;
+                opponentSprite = `<div style='
+                background-color: white;
+                color: black;
+                border: 1px solid black;
+                border-radius: 1em;
+                width: 14.88em;
+                height: 20.78em; 
+                display: flex; 
+                align-items: center;'> <p id="texto" style='
+                text-align: center; 
+                font-family: sans-serif; 
+                font-weight: bold; 
+                font-size: 4em; 
+                vertical-align: middle; 
+                margin: auto !important;'> HDP </p> </div>`;
             } else {
-                playerSprite = 'magentaCardFront';
-                opponentSprite = 'cyanCardBack';
+                playerSprite = `<div style='
+                background-color: white;
+                color: black;
+                border: 1px solid black;
+                border-radius: 1em;
+                width: 14.88em;
+                height: 20.78em;'> <p id="texto" style='
+                padding: .5em 1.5em 1em 1.5em;
+                font-family: sans-serif;
+                font-weight: bold;
+                font-size: 1.3em;
+                line-height: 1.3em;'> Un minuto de silencio. </p> </div>`;
+                opponentSprite = `<div style='
+                background-color: white;
+                color: black;
+                border: 1px solid black;
+                border-radius: 1em;
+                width: 14.88em;
+                height: 20.78em; 
+                display: flex; 
+                align-items: center;'> <p id="texto" style='
+                text-align: center; 
+                font-family: sans-serif;
+                font-weight: bold; 
+                font-size: 4em; 
+                vertical-align: middle; 
+                margin: auto !important;'> HDP </p> </div>`;
             };
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 7; i++) {
                 let playerCard = new Card(scene);
-                playerCard.render(475 + (i * 100), 650, playerSprite);
+                playerCard.render(375 + (i * 100), 650, playerSprite);
 
                 let opponentCard = new Card(scene);
-                scene.opponentCards.push(opponentCard.render(475 + (i * 100), 125, opponentSprite).disableInteractive());
+                scene.opponentCards.push(opponentCard.render(375 + (i * 100), 125, opponentSprite).disableInteractive());
             }
         }
     }

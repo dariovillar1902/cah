@@ -6,6 +6,8 @@ import io from 'socket.io-client';
 
 import Dealer from '../helpers/dealer.js';
 
+import WebFontFile from '../helpers/WebFontFile';
+
 export default class Game extends Phaser.Scene {
     constructor() {
         super({
@@ -15,12 +17,17 @@ export default class Game extends Phaser.Scene {
 
     preload() {
         this.load.image('cyanCardFront', 'src/assets/CyanCardFront.png');
-        this.load.image('cyanCardBack', 'src/assets/CyanCardBack.png');
+        this.load.html('cartaNegra', 'src/assets/cartanegra.html');
         this.load.image('magentaCardFront', 'src/assets/MagentaCardFront.png');
         this.load.image('magentaCardBack', 'src/assets/MagentaCardBack.png');
+        this.load.html('cartaBlanca', 'src/assets/cartablanca.html');
+        this.load.addFile(new WebFontFile(this.load, 'Work Sans'))
     }
 
     create() {
+        
+        var cartaNegraHTML = `<div style='background-color: black; color: white; border: 1px solid white; border-radius: 1em; width: 14.88em; height: 20.78em; display: flex; align-items: center;'> <p style='text-align: center; font-family: "Work Sans"; font-weight: bold; font-size: 4em; vertical-align: middle; margin: auto !important;'> HDP </p> </div>`;
+
         this.isPlayerA = false;
         this.opponentCards = [];
 
@@ -46,13 +53,12 @@ export default class Game extends Phaser.Scene {
                 card.render(((self.dropZone.x - 350) + (self.dropZone.data.values.cards * 50)), (self.dropZone.y), sprite).disableInteractive();
             }
         })
-        
+
         this.zone = new Zone(this);
         this.dropZone = this.zone.renderZone();
         this.outline = this.zone.renderOutline(this.dropZone);
 
         this.dealText = this.add.text(75, 350, ['DEAL CARDS']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#00ffff').setInteractive();
-    
         let self = this;
 
         this.dealer = new Dealer(this);
@@ -75,12 +81,13 @@ export default class Game extends Phaser.Scene {
         })    
 
         this.input.on('dragstart', function (pointer, gameObject) {
-            gameObject.setTint(0xff69b4);
+            //self.node.firstChild.firstElementChild.disableInteractive(gameObject);
+            //gameObject.setTint(0xff69b4);
             self.children.bringToTop(gameObject);
         })
 
         this.input.on('dragend', function (pointer, gameObject, dropped) {
-            gameObject.setTint();
+            //gameObject.setTint();
             if (!dropped) {
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;
