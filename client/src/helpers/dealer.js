@@ -1,10 +1,12 @@
 import Card from './card';
+import Card2 from './oppCard';
 
 export default class Dealer {
     constructor(scene) {
         this.dealCards = () => {
             let playerSprite;
             let opponentSprite;
+
             if (scene.isPlayerA) {
                 playerSprite = `<div style='
                 background-color: white;
@@ -17,7 +19,7 @@ export default class Dealer {
                 font-family: sans-serif;
                 font-weight: bold;
                 font-size: 1.3em;
-                line-height: 1.3em;'> Una maldición gitana. </p> </div>`;
+                line-height: 1.3em;'> a </p> </div>`;
                 opponentSprite = `<div style='
                 background-color: white;
                 color: black;
@@ -45,7 +47,7 @@ export default class Dealer {
                 font-family: sans-serif;
                 font-weight: bold;
                 font-size: 1.3em;
-                line-height: 1.3em;'> Un minuto de silencio. </p> </div>`;
+                line-height: 1.3em;'> a </p> </div>`;
                 opponentSprite = `<div style='
                 background-color: white;
                 color: black;
@@ -66,7 +68,7 @@ export default class Dealer {
                 let playerCard = new Card(scene);
                 playerCard.render(375 + (i * 100), 650, playerSprite);
 
-                let opponentCard = new Card(scene);
+                let opponentCard = new Card2(scene);
                 scene.opponentCards.push(opponentCard.render(375 + (i * 100), 125, opponentSprite).disableInteractive());
             }
         }

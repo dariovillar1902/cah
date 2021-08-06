@@ -34,13 +34,35 @@ export default class Game extends Phaser.Scene {
     }
 
     create() {
-        var indiceCartaNegra = Phaser.Math.Between(0, 5);
         var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora prohibe _________ en los aviones.", 
         "Es una pena que hoy en día los jóvenes se están metiendo con _________.", 
         "En 1000 años, cuando el papel moneda sea una memoria distante, _________ va a ser nuestra moneda.", 
         "La Asociación de Fútbol Argentino ha prohibido _________ por dar a los jugadores una ventaja injusta.", 
         "¿Cuál es el placer culposo de Batman?", 
-        "Lo nuevo de JK Rowling: Harry Potter y la Cámara de _________."];
+        "Lo nuevo de JK Rowling: Harry Potter y la Cámara de _________.",
+        "¿Qué me traje de vuelta de Paraguay?",
+        "¿_________? Hay una app para eso.",
+        "_________. ¿A que no podés comer sólo una?",
+        "¿Cuál es mi sustituto para no usar drogas?",
+        "Cuando los EEUU y la URSS corrían la carrera espacial, el gobierno argentino dedicó millones de pesos a la investigación de _________.",
+        "En la nueva película original de Disney Channel, Hannah Montana se enfrenta a _________ por primera vez.",
+        "¿Cuál es mi poder secreto?",
+        "¿Cuál es la nueva dieta de moda?",
+        "¿Qué comió Vin Diesel para la cena?",
+        "Cuando el faraón se mantuvo en su postura, Moisés llamó una Plaga de _________.",
+        "¿Qué hago para mantener estable mi relación amorosa?",
+        "¿Qué es lo más crujiente?",
+        "En la cárcel de Devoto se dice que podés cambiar 200 cigarrillos por _________.",
+        "Ahora, en vez de carbón, Papá Noel le da _________ a los chicos malos.",
+        "La vida para los pueblos originarios cambió drásticamente cuando el hombre blanco les mostró _________.",
+        "En los momentos finales de Michael Jackson, pensó en _________.",
+        "A la gente blanca le gusta _________.",
+        "¿Por qué me duele todo?",
+        "Una cena romántica a la luz de las velas estaría incompleta sin _________.",
+        "¿Qué llevaría en un viaje al pasado para convencer a la gente de que soy un poderoso hechicero?",
+    ];
+    var indiceCartaNegra = Phaser.Math.Between(0, arrayCartasNegras.length - 1);
+    console.log(indiceCartaNegra);
         timedEvent = this.time.delayedCall(60000, onEvent);
         var cartaNegraElegida = `<div style='
                 background-color: black;
@@ -53,7 +75,7 @@ export default class Game extends Phaser.Scene {
                 font-family: sans-serif;
                 font-weight: bold;
                 font-size: 1.3em;
-                line-height: 1.3em;'> La normativa de la Secretaria de Transporte ahora prohibe _________ en los aviones. </p> </div>`;
+                line-height: 1.3em;'> </p> </div>`;
         var cartaNegraFinal = this.add.dom(400, 375).createFromHTML(cartaNegraElegida).setScale(0.7, 0.7);
         cartaNegraFinal.node.children[0].children[0].innerText = arrayCartasNegras[indiceCartaNegra];
         text = this.add.text(55, 55, "60", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
