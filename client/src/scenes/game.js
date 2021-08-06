@@ -92,18 +92,25 @@ export default class Game extends Phaser.Scene {
 
         this.socket.on('dealCards', function () {
             self.dealer.dealCards();
-            self.dealText.disableInteractive();
-            // timer.start();
-            
+            // timer.start();     
+        })
+
+        this.socket.on('cartaReemplazo', function () {
+            self.dealer.cartaReemplazo(xCartaJugada, yCartaJugada);
+            // timer.start();     
         })
 
         this.socket.on('cardPlayed', function (gameObject, isPlayerA) {
+                console.log(xCartaJugada);
+                console.log(yCartaJugada);
+                self.socket.emit('cartaReemplazo');
             if (isPlayerA !== self.isPlayerA) {
                 let sprite = gameObject.textureKey;
                 self.opponentCards.shift().destroy();
                 self.dropZone.data.values.cards++;
                 let card = new Card(self);
                 card.render(((self.dropZone.x - 350) + (self.dropZone.data.values.cards * 50)), (self.dropZone.y), sprite).disableInteractive();
+                
             }
         })
 
@@ -111,22 +118,12 @@ export default class Game extends Phaser.Scene {
         this.dropZone = this.zone.renderZone();
         this.outline = this.zone.renderOutline(this.dropZone);
 
-        this.dealText = this.add.text(75, 350, ['DEAL CARDS']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#00ffff').setInteractive();
         let self = this;
+        let xCartaJugada;
+        let yCartaJugada;
 
         this.dealer = new Dealer(this);
-
-        this.dealText.on('pointerdown', function () {
-            self.socket.emit("dealCards");
-        })
-
-        this.dealText.on('pointerover', function () {
-            self.dealText.setColor('#ff69b4');
-        })
-
-        this.dealText.on('pointerout', function () {
-            self.dealText.setColor('#00ffff');
-        })
+        self.socket.emit("dealCards");
 
         this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
             gameObject.x = dragX;
@@ -134,9 +131,12 @@ export default class Game extends Phaser.Scene {
         })    
 
         this.input.on('dragstart', function (pointer, gameObject) {
+            // self.node.children[0].children[0].innerText.disableInteractive(gameObject); 
             //self.node.firstChild.firstElementChild.disableInteractive(gameObject);
             //gameObject.setTint(0xff69b4);
             self.children.bringToTop(gameObject);
+            xCartaJugada = gameObject.input.dragStartX;
+            yCartaJugada = gameObject.input.dragStartY;
         })
 
         this.input.on('dragend', function (pointer, gameObject, dropped) {

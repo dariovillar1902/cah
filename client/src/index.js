@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import Game from "./scenes/game";
+import salaDeEspera from "./scenes/salaDeEspera";
 
 const config = {
     type: Phaser.AUTO,
@@ -10,7 +11,7 @@ const config = {
         createContainer: true
     },
     scene: [
-        Game
+        salaDeEspera, Game
     ]
 };
 
