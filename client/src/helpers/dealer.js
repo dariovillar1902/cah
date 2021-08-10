@@ -63,12 +63,12 @@ export default class Dealer {
                 vertical-align: middle; 
                 margin: auto !important;'> HDP </p> </div>`;
             };
-            for (let i = 0; i < 7; i++) {
+            for (let i = 0; i < 10; i++) {
                 let playerCard = new Card(scene);
-                playerCard.render(375 + (i * 100), 650, playerSprite);
+                playerCard.render(175 + (i * 100), 650, playerSprite);
 
                 let opponentCard = new Card2(scene);
-                scene.opponentCards.push(opponentCard.render(375 + (i * 100), 125, opponentSprite).disableInteractive());
+                scene.opponentCards.push(opponentCard.render(175 + (i * 100), 125, opponentSprite).disableInteractive());
             }
         },
         this.cartaReemplazo = (x, y) => {
