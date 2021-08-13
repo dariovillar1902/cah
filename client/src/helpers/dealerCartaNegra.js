@@ -3,7 +3,7 @@ import Card2 from './oppCard';
 
 export default class Dealer {
     constructor(scene) {
-        this.dealCards = (cartasBlancasDeJugador) => {
+        this.dealCards = () => {
             let playerSprite;
             let opponentSprite;
             if (scene.isPlayerA) {
@@ -65,12 +65,10 @@ export default class Dealer {
             };
             for (let i = 0; i < 10; i++) {
                 let playerCard = new Card(scene);
-                let textoCarta = cartasBlancasDeJugador[i];
-                console.log(textoCarta);
-                playerCard.render(175 + (i * 100), 650, playerSprite, textoCarta);
+                playerCard.render(175 + (i * 100), 650, playerSprite);
 
                 let opponentCard = new Card2(scene);
-                scene.opponentCards.push(opponentCard.render(175 + (i * 100), 125, opponentSprite, "HDP").disableInteractive());
+                scene.opponentCards.push(opponentCard.render(175 + (i * 100), 125, opponentSprite).disableInteractive());
             }
         },
         this.cartaReemplazo = (x, y) => {

@@ -10,6 +10,9 @@ import WebFontFile from '../helpers/WebFontFile';
 
 var text;
 var timedEvent;
+var horaInicio;
+var cartasBlancasDeJugador = [];
+
 
 function onEvent() {
     timedEvent.remove();
@@ -23,11 +26,6 @@ export default class Game extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('cyanCardFront', 'src/assets/CyanCardFront.png');
-        this.load.html('cartaNegra', 'src/assets/cartanegra.html');
-        this.load.image('magentaCardFront', 'src/assets/MagentaCardFront.png');
-        this.load.image('magentaCardBack', 'src/assets/MagentaCardBack.png');
-        this.load.html('cartaBlanca', 'src/assets/cartablanca.html');
         this.load.addFile(new WebFontFile(this.load, 'Work Sans'));
         // timer.loop(2000, updateCounter, this);
         // timer.start();
@@ -61,8 +59,7 @@ export default class Game extends Phaser.Scene {
         "Una cena romántica a la luz de las velas estaría incompleta sin _________.",
         "¿Qué llevaría en un viaje al pasado para convencer a la gente de que soy un poderoso hechicero?",
     ];
-    var indiceCartaNegra = Phaser.Math.Between(0, arrayCartasNegras.length - 1);
-    console.log(indiceCartaNegra);
+
         timedEvent = this.time.delayedCall(60000, onEvent);
         var cartaNegraElegida = `<div style='
                 background-color: black;
@@ -77,22 +74,34 @@ export default class Game extends Phaser.Scene {
                 font-size: 1.3em;
                 line-height: 1.3em;'> </p> </div>`;
         var cartaNegraFinal = this.add.dom(400, 375).createFromHTML(cartaNegraElegida).setScale(0.7, 0.7);
-        cartaNegraFinal.node.children[0].children[0].innerText = arrayCartasNegras[indiceCartaNegra];
+        cartaNegraFinal.node.children[0].children[0].innerText = arrayCartasNegras[parseInt(sessionStorage.getItem("numeroCartaNegra"))];
         text = this.add.text(55, 55, "60", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
+        var usuarioCartas = this.add.text(50, 600, "Cartas de " + sessionStorage.getItem("nombre"), {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         this.isPlayerA = false;
         this.opponentCards = [];
+        horaInicio = parseInt(sessionStorage.getItem("horaInicio"));
+        var arrayCartasBlancas = ["Una maldición gitana.","Un minuto de silencio.","Mucho pibe, poca mina.","Un policía honesto, sin nada que perder.","Hambruna.","Bacteria come-carne.","Serpientes sexuales voladoras.","Que no te importe un carajo el tercer mundo.","Sexting.","Criaturas cambia-aspecto.","Estrellas porno.","Saquear y violar.","72 vírgenes.","Persecución y tiroteo.","Una paradoja temporal.","Auténtica comida mexicana.","Bijouterie de Once.","Consultores.","Deuda impagable.","Complejo de Elektra.","El 10 de Pachano.","Tirar un candelabro sobre tus enemigos y subir colgado de la soga.","Carlos Saúl Menem.","Desnudo frontal total.","Inyecciones hormonales.","Poner un huevo.","Desnudarse y mirar Nickelodeon.","Fingir que te importa.","Hacer el ridículo en público.","Compartir jeringas.","Mocos.","La inevitable muerte por calor del universo.","El milagro del nacimiento.","El apocalipsis.","Sacar el amigo.","Privilegios de la gente blanca.","Obligaciones de casada.","El payaso de McDonalds.","Desodorante AXE.","La sangre de Cristo.","Accidentes horroríficos con láser para remoción de pelo.","BATMAN!!!","Agricultura.","Un mongoloide robusto.","Selección natural.","Abortos hechos con perchas.","Comerse todas las galletitas antes de la venta de galletas para el SIDA.","El escote de la diputada Hot.","World of Warcraft.","Proteger a una amiga de un hinchapelotas.","Obesidad.","Un montaje homoerótico de Voleibol.","Mandíbula trabada.","Un ritual de apareamiento.","Torsión testicular.","Sushi de Tenedor Libre.","Ricardo Fort.","Queso caliente.","Ataques de velocirraptors.","Sacarte la remera.","Smegma.","Alcoholismo.","Un hombre de mediana edad andando en rollers.","Super Rayo Cariñosito.","Tener arcadas y vomitar.","Chupetines demasiado grandes.","Odiarse a uno mismo.","Niños con correas.","Juego previo de medio pelo.","La Biblia.","Porno extremo alemán.","Estar prendido fuego.","Embarazo adolescente.","Gandhi.","Dejar un mensaje de voz incómodo.","Una trompada.","Representantes del Servicio al Consumidor.","Una erección que dure más de 4 horas.","Mis genitales.","Ir de levante a una clínica de abortos.","Ciencia.","Sexo oral no reciprocado.","Aves que no pueden volar.","Una buena línea.","Tortura por ahogamiento simulado.","Un desayuno balanceado.","El Normal 4.","Sacarle un dulce a un niño. De verdad.","Un Sol para los Chicos.","Rascarse el culo a escondidas.","Post-it pasivo-agresivos.","El equipo de gimnasia de China.","Pasarse a La Caja de Ahorro.","Mear un poquito.","Video casero de Claribel Medina llorando mientras come una viandita Cormillot.","Eyaculaciones nocturnas.","Los judíos.","Mis curvas.","Muslos poderosos.","Guiñarle el ojo a gente mayor.","Mr Músculo, saliendo de la nada.","Una suave caricia en el interior del muslo.","Tensión sexual.","La fruta prohibida.","Skeletor.","Whiskas.","Ser rico.","Dulce venganza.","Menemistas.","Un antílope con gases.","Natalie Portman.","Una tocadita disimulada.","Pilotos Kamikaze.","Sean Connery.","La legislación homosexual.","El paraguayo trabajador en serio.","Un pájaro en una jaula cubierta.","Monaguillos.","La Caja Vengadora.","Enojarte tanto que se te para.","Muestras gratis.","Mucho ruido y pocas nueces.","Hacer lo correcto.","La Asamblea del Año XIII.","Lactación.","Paz mundial.","RoboCop.","Cabeza de termo.","Justin Bieber.","Oompa-Loompas.","Gemido tirolés.","Pubertad.","Fantasmas.","Lolas hechas asimétricas.","Las Manos Mágicas.","Colarse los dedos.","Mariano Grondona agarrándose el escroto en un gancho de cortina.","Naranjú.","Brutalidad policíaca.","El petiso orejudo.","Preadolescentes.","Escalpar.","Tweeting.","Darth Vader.","Una tirada de goma decepcionante.","Exactamente lo que esperarías.","Esperar un eructo y terminar vomitando en el piso.","Células madre de embriones.","Escote elegante y pronunciado.","No ponerla nunca.","Una lobotomía hecha con un picahielo.","Tom Cruise.","Herpes bucal.","Cachalote.","Gente sin casa.","Tercera base.","Incesto.","Pac-man traga-leche.","Un mimo teniendo un ataque.","Hulk Hogan.","Dios.","Lavarse los pliegues.","Lluvia dorada.","Emociones.","Lamer cosas para marcar territorio.","Cerveza Patagonia.","La placenta.","Combustión humana espontánea.","Amigos con beneficios.","Pintar con los dedos.","Olor a abuelo.","Morirse de cólera.","Mis demonios internos.","Un trapo de piso empapado en pis de gato.","Domingo Cavallo.","Acurrucarse.","El porro.","Peleas de gallos.","Fuego aliado.","Juan Domingo Perón.","Una fiesta de cumpleaños decepcionante.","Una mina canchera.","El equipo de olimpiadas de matemática.","Un pequeño caballito.","William Shatner.","Cabalgar hacia el horizonte.","Un giro argumental de M. Night Shyamalan.","Peyot.","Destrucción mutua garantizada.","Pederastas.","Levadura.","Robo de tumbas.","Comerse el último yaguareté.","Catapultas.","Gente pobre.","Olvidarte de la Vuelta de Obligado.","El Meneadito.","La Fuerza.","El perreo.","Diseño inteligente.","Boca floja.","SIDA.","Fotos de tetas.","The Ubersmench.","Lilita Carrió.","Supermatch.","Drogarse zarpado.","Cientología.","La envidia del pene.","Rezar para curar lo gay.","Retozar.","Dos enanos cagando en un balde.","El Ku Klux Klan.","Gengis Khan.","Metanfetamina.","Servidumbre feudal.","Cuidado con los extraños.","Simón dice.","La carrera actoral de Martín Palermo.","Caminar dando saltitos de felicidad.",
+            ];
 
+        var nombres = sessionStorage.getItem("nombresJugadores").split(",");
+        var cartas = sessionStorage.getItem("seleccionCartasInicial").split(",");
+        for(var i = 0; i < nombres.length; i++){
+            if (i == sessionStorage.getItem("idJugador")) {
+                console.log("Cartas de " + nombres[i]);
+                for(var j = i*10; j < (i*10)+10; j++){
+                    console.log(arrayCartasBlancas[cartas[j]]);
+                    cartasBlancasDeJugador.push(arrayCartasBlancas[cartas[j]]);
+                }
+            }
+        }
+
+        this.dealer = new Dealer(this);
+        this.dealer.dealCards(cartasBlancasDeJugador);
+        console.log(sessionStorage.getItem("idJugador"));
         this.socket = io('http://localhost:3000', {transports : ["websocket"] })
-        this.socket.on('connect', function () {
-        	console.log('Connected!');
-        });
+
         this.socket.on('isPlayerA', function () {
         	self.isPlayerA = true;
-        })
-
-        this.socket.on('dealCards', function () {
-            self.dealer.dealCards();
-            // timer.start();     
         })
 
         this.socket.on('cartaReemplazo', function () {
@@ -122,8 +131,7 @@ export default class Game extends Phaser.Scene {
         let xCartaJugada;
         let yCartaJugada;
 
-        this.dealer = new Dealer(this);
-        self.socket.emit("dealCards");
+        
 
         this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
             gameObject.x = dragX;
@@ -154,13 +162,13 @@ export default class Game extends Phaser.Scene {
             gameObject.disableInteractive();
             self.socket.emit('cardPlayed', gameObject, self.isPlayerA);
         })
-        
     }
     
     update() {
+        var horaActual = new Date().getTime();
         // text.setText('Event.progress: ' + timedEvent.getProgress().toString().substr(0, 4));
-        var cantidadSegundos = timedEvent.getProgress() * 60;
-        var segundosRestantes = 60 - cantidadSegundos;
+        var diferenciaS = (horaActual - horaInicio)/1000;
+        var segundosRestantes = 60 - diferenciaS;
         if (segundosRestantes > 10) {
             text.setText(segundosRestantes.toString().substr(0, 2));
         } else if (segundosRestantes > 0 && segundosRestantes < 10) {
