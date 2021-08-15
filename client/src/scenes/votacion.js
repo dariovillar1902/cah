@@ -13,12 +13,16 @@ var horaInicio;
 var cartasBlancasDeJugador = [];
 var cartaJugada = false;
 var rondaActiva = true;
-var textoCartaElegida;
+var cartaVotada;
+var votacionRealizada = false;
+var jugadorVotado;
+var cartaBlancaFinal = [];
 
-export default class Game extends Phaser.Scene {
+
+export default class Votacion extends Phaser.Scene {
     constructor() {
         super({
-            key: 'Game'
+            key: 'Votacion'
         });
     }
 
@@ -27,7 +31,42 @@ export default class Game extends Phaser.Scene {
     }
 
     create() {
-        var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora prohibe _________ en los aviones.", 
+        var nombres = sessionStorage.getItem("nombresJugadores").split(",");
+        for(var i = 0; i < nombres.length; i++){
+            if (i == sessionStorage.getItem("idJugador")) {
+                var nombreJugador = nombres[i];
+            }
+        }
+        let self = this;
+        this.socket = io('http://localhost:3000', {transports : ["websocket"] })
+        this.socket.on('comienzaVotacion', function (ordenJugadoresEnRonda, cartasJugadasEnRonda) {
+            for (var i = 0; i < ordenJugadoresEnRonda.length; i++){
+                var cartaBlanca = `<div style='
+                background-color: white;
+                color: black;
+                border: 1px solid black;
+                border-radius: 1em;
+                width: 14.88em;
+                height: 20.78em;'> <p id="texto" style='
+                padding: .5em 1.5em 1em 1.5em;
+                font-family: sans-serif;
+                font-weight: bold;
+                font-size: 1.3em;
+                line-height: 1.3em;'> </p> </div>`;
+                cartaBlancaFinal[i] = self.add.dom(400 + i*200, 375).createFromHTML(cartaBlanca).setScale(0.7, 0.7).setInteractive();
+                cartaBlancaFinal[i].node.children[0].children[0].innerText = cartasJugadasEnRonda[i];
+                cartaBlancaFinal[i].on('pointerdown', function (pointer) {
+                    if (pointer.downElement.innerText !== ""){
+                        console.log(pointer.downElement.innerText);
+                        cartaVotada = pointer.downElement.innerText;
+                        votacionRealizada = true;
+                        self.socket.emit('votoEmitido', cartaVotada, nombreJugador);
+                    }
+                }, self);
+            }
+        })
+        console.log("Ronda de votación activa");
+        /* var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora prohibe _________ en los aviones.", 
         "Es una pena que hoy en día los jóvenes se están metiendo con _________.", 
         "En 1000 años, cuando el papel moneda sea una memoria distante, _________ va a ser nuestra moneda.", 
         "La Asociación de Fútbol Argentino ha prohibido _________ por dar a los jugadores una ventaja injusta.", 
@@ -111,7 +150,7 @@ export default class Game extends Phaser.Scene {
                 line-height: 1.3em;'> </p> </div>`;
         var cartaNegraFinal = this.add.dom(400, 375).createFromHTML(cartaNegraElegida).setScale(0.7, 0.7);
         cartaNegraFinal.node.children[0].children[0].innerText = arrayCartasNegras[parseInt(sessionStorage.getItem("numeroCartaNegra"))];
-        text = this.add.text(55, 55, "60", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
+        
         this.isPlayerA = false;
         this.opponentCards = [];
         horaInicio = parseInt(sessionStorage.getItem("horaInicio"));
@@ -122,7 +161,6 @@ export default class Game extends Phaser.Scene {
         var cartas = sessionStorage.getItem("seleccionCartasInicial").split(",");
         for(var i = 0; i < nombres.length; i++){
             if (i == sessionStorage.getItem("idJugador")) {
-                var nombreJugador = nombres[i];
                 console.log("Cartas de " + nombres[i]);
                 for(var j = i*10; j < (i*10)+10; j++){
                     console.log(arrayCartasBlancas[cartas[j]]);
@@ -150,6 +188,11 @@ export default class Game extends Phaser.Scene {
 
         this.socket.on('cartaJugadaPorOponente', function () {
             console.log("Alguien jugó una carta");
+        })
+
+        this.socket.on('rondaTerminada', function () {
+        	console.log("Terminó la ronda");
+            self.scene.switch('salaDeEspera');
         })
 
         this.zone = new Zone(this);
@@ -186,15 +229,15 @@ export default class Game extends Phaser.Scene {
             dropZone.data.values.cards++;
             gameObject.x = (dropZone.x - 50) + (dropZone.data.values.cards * 50);
             gameObject.y = dropZone.y;
-            gameObject.disableInteractive(); 
-            textoCartaElegida = gameObject.node.children[0].children[0].innerText;
-            console.log(textoCartaElegida);
-            self.socket.emit('cardPlayed', gameObject, nombreJugador, textoCartaElegida);
+            gameObject.disableInteractive();
+            self.socket.emit('cardPlayed', gameObject);
             cartaJugada = true;
         })
+        */
     }
     
     update() {
+        /*
         var horaActual = new Date().getTime();
         // text.setText('Event.progress: ' + timedEvent.getProgress().toString().substr(0, 4));
         var diferenciaS = (horaActual - horaInicio)/1000;
@@ -206,8 +249,8 @@ export default class Game extends Phaser.Scene {
         } else {
             rondaActiva = false;
             this.socket.emit('rondaTerminada');
-            this.scene.switch('Votacion');
         }
+        */
     }
 
 

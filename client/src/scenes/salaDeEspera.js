@@ -29,7 +29,7 @@ export default class salaDeEspera extends Phaser.Scene {
             var botonConfirmar ="<form style='display: flex; flex-direction: column'><input type='button' value='Crear sala' id='botonEntrar' style='background-color: black;color: white;border: 1px solid white;border-radius: 1em;width: 500px;height: 70px;font-family: sans-serif;font-size: 30px;text-align: center;'></form>";
             var ingresarNombre = self.add.dom(640, 150).createFromHTML(formularioNombre);
             self.startBtn = self.add.dom(640, 250).createFromHTML(botonConfirmar).setInteractive();
-            self.startBtn.on('pointerdown', function () {
+            self.startBtn.on('pointerdown', function (pointer) {
                 if (salaIniciada == false){
                     var nombreJugador = ingresarNombre.node.children[0].children[0].value;
                     sessionStorage.setItem("nombre", nombreJugador);

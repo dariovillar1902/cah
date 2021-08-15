@@ -29,6 +29,48 @@ var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora proh
         "¿Por qué me duele todo?",
         "Una cena romántica a la luz de las velas estaría incompleta sin _________.",
         "¿Qué llevaría en un viaje al pasado para convencer a la gente de que soy un poderoso hechicero?",
+        "La excursión del curso fue completamente arruinada por _________.",
+        "¿Qué es el mejor amigo de una chica?",
+        "Cuando sea Presidente de la Argentina, voy a crear el Ministerio de _________.",
+        "¿Qué me están escondiendo mis padres?",
+        "¿Qué nunca falla para animar una fiesta?",
+        "¿Qué mejora con la edad?",
+        "_________: Rico hasta la última gota",
+        "Tengo 99 problemas, pero _________ no es uno.",
+        "_________. ¡Es una trampa!",
+        "El nuevo Gran Hermano Famosos va a tener 8 famosos de segunda viviendo con _________.",
+        "¿Qué encontraría la abuela perturbador, pero extrañamente encantador?",
+        "¿Qué es lo más emo?",
+        "Durante el sexo, me gusta pensar en _________.",
+        "¿Qué terminó mi última relación?",
+        "¿Qué es ese ruido?",
+        "_________. Así quiero morir",
+        "¿Por qué estoy pegajoso?",
+        "¿Cuál es el próximo juguete de la Cajita Feliz?",
+        "¿De qué hay un montón en el cielo?",
+        "No sé con qué armas se luchará la tercera guerra mundial, pero la cuarta se luchará con _________.",
+        "¿Qué cosa siempre logra llevarte a la cama?",
+        "_________: Probado en niños, aprobado por madres.",
+        "¿Por qué no me puedo dormir por las noches?",
+        "¿Qué es ese olor?",
+        "¿Qué ayuda a Cristina Kirchner a relajarse?",
+        "Así termina el mundo, no con un Big Bang, sino con _________.",
+        "Llega a la calle Corrientes este verano, _________: El Musical",
+        "Antropólogos han descubierto recientemente a una tribu primitiva que adora _________.",
+        "Pero antes de matarlo, Sr Bond, debo mostrarle _________.",
+        "Estudios demuestran que las ratas de laboratorio recorren laberintos 50% más rápido después de ser expuestas a _________.",
+        "A continuación, en ESPN+: El torneo mundial de _________.",
+        "Cuando sea billonario, erigiré una estatua de 15 metros de altura conmemorando _________.",
+        "Con la intención de atraer más público, el Museo de Ciencias Naturales abrió una exhibición interactiva de _________.",
+        "Yo me pregunto, ¿para qué sirve la guerra?",
+        "¿Qué me da gases incontrolables?",
+        "¿A qué huele la gente mayor?",
+        "La medicina alternativa ahora está usando las propiedades curativas de _________.",
+        "Durante el frecuentemente no tenido en cuenta Período Marrón de Picasso, él produjo cientos de pinturas de _________.",
+        "¿Qué no querés encontrar en tu comida china?",
+        "Tomo para olvidar _________.",
+        "_________. Chocá los 5, papá",
+        "Lo siento profesor, pero no pude completar mi tarea porque _________."
     ];
 
     var indiceCartaNegra = Math.floor(Math.random() * (arrayCartasNegras.length - 1));
@@ -37,6 +79,9 @@ var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora proh
     
     var seleccionCartasInicial = [];
     var indiceCartaBlanca;
+    var cartasJugadasEnRonda = [];
+    var ordenJugadoresEnRonda = [];
+    var horaInicial;
     
 
 io.on('connection', function (socket) {
@@ -56,7 +101,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('iniciarJuego', function () {
-        var horaInicial = new Date().getTime();
+        horaInicial = new Date().getTime();
         for (i = 0; i < (nombresJugadores.length); i++){
             console.log("Cartas de: " + nombresJugadores[i]);
             seleccionCartasInicial[i] = new Array();
@@ -69,17 +114,27 @@ io.on('connection', function (socket) {
         io.emit('iniciarJuego', nombresJugadores, indiceCartaNegra, horaInicial, seleccionCartasInicial);
     });
 
-    socket.on('cartaReemplazo', function () {
-        io.emit('cartaReemplazo');
+    socket.on('cardPlayed', function (gameObject, nombreJugador, textoCartaElegida) {
+        ordenJugadoresEnRonda.push(nombreJugador);
+        cartasJugadasEnRonda.push(textoCartaElegida);
+        console.log(ordenJugadoresEnRonda);
+        console.log(cartasJugadasEnRonda);
+        indiceCartaBlanca = Math.floor(Math.random() * (arrayCartasBlancas.length - 1));
+        io.emit('cartaReemplazo', gameObject, indiceCartaBlanca);
+        socket.broadcast.emit('cartaJugadaPorOponente');
     });
 
-    socket.on('cardPlayed', function (gameObject, isPlayerA) {
-        io.emit('cardPlayed', gameObject, isPlayerA);
+    socket.on('rondaTerminada', function () {
+        io.emit('comienzaVotacion', ordenJugadoresEnRonda, cartasJugadasEnRonda);
     });
 
     socket.on('disconnect', function () {
         console.log('A user disconnected: ' + socket.id);
         players = players.filter(player => player !== socket.id);
+    });
+
+    socket.on('votoEmitido', function (cartaVotada, nombreJugador) {
+        console.log("El jugador " + nombreJugador + " votó la carta " + cartaVotada);
     });
 });
 

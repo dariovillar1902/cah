@@ -66,18 +66,16 @@ export default class Dealer {
             for (let i = 0; i < 10; i++) {
                 let playerCard = new Card(scene);
                 let textoCarta = cartasBlancasDeJugador[i];
-                console.log(textoCarta);
                 playerCard.render(175 + (i * 100), 650, playerSprite, textoCarta);
 
                 let opponentCard = new Card2(scene);
                 scene.opponentCards.push(opponentCard.render(175 + (i * 100), 125, opponentSprite, "HDP").disableInteractive());
             }
         },
-        this.cartaReemplazo = (x, y) => {
+        this.cartaReemplazo = (x, y, textoCartaReemplazo) => {
             console.log("Activado")
             let playerSprite;
             let opponentSprite;
-
             if (scene.isPlayerA) {
                 playerSprite = `<div style='
                 background-color: white;
@@ -136,7 +134,7 @@ export default class Dealer {
                 margin: auto !important;'> HDP </p> </div>`;
             };
                 let playerCard = new Card(scene);
-                playerCard.render(x, y, playerSprite);
+                playerCard.render(x, y, playerSprite, textoCartaReemplazo);
 
         }
     }
