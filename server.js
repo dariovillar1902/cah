@@ -82,6 +82,8 @@ var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora proh
     var cartasJugadasEnRonda = [];
     var ordenJugadoresEnRonda = [];
     var horaInicial;
+    var horaInicialRondaVotacion;
+    var puntosDeCartas = [];
     
 
 io.on('connection', function (socket) {
@@ -117,6 +119,7 @@ io.on('connection', function (socket) {
     socket.on('cardPlayed', function (gameObject, nombreJugador, textoCartaElegida) {
         ordenJugadoresEnRonda.push(nombreJugador);
         cartasJugadasEnRonda.push(textoCartaElegida);
+        puntosDeCartas.push(0);
         console.log(ordenJugadoresEnRonda);
         console.log(cartasJugadasEnRonda);
         indiceCartaBlanca = Math.floor(Math.random() * (arrayCartasBlancas.length - 1));
@@ -125,7 +128,8 @@ io.on('connection', function (socket) {
     });
 
     socket.on('rondaTerminada', function () {
-        io.emit('comienzaVotacion', ordenJugadoresEnRonda, cartasJugadasEnRonda);
+        horaInicialRondaVotacion = new Date().getTime();
+        io.emit('rondaTerminada', ordenJugadoresEnRonda, cartasJugadasEnRonda, horaInicialRondaVotacion);
     });
 
     socket.on('disconnect', function () {
@@ -134,7 +138,14 @@ io.on('connection', function (socket) {
     });
 
     socket.on('votoEmitido', function (cartaVotada, nombreJugador) {
-        console.log("El jugador " + nombreJugador + " votó la carta " + cartaVotada);
+        for (var i = 0; i < cartasJugadasEnRonda.length; i++){
+            if (cartaVotada == cartasJugadasEnRonda[i]){
+                puntosDeCartas[i] += 1;
+                console.log(puntosDeCartas);
+                console.log("El jugador " + nombreJugador + " votó la carta " + cartaVotada + " con el indice " + i + " perteneciente al jugador " + ordenJugadoresEnRonda[i]);
+            }
+        }
+        
     });
 });
 

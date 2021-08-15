@@ -192,8 +192,35 @@ export default class Game extends Phaser.Scene {
             self.socket.emit('cardPlayed', gameObject, nombreJugador, textoCartaElegida);
             cartaJugada = true;
         })
+
+        this.socket.on('rondaTerminada', function (ordenJugadoresEnRonda, cartasJugadasEnRonda, horaInicialRondaVotacion) {
+            self.scene.switch('Votacion');
+            sessionStorage.setItem("ordenJugadoresEnRonda", ordenJugadoresEnRonda);
+            sessionStorage.setItem("cartasJugadasEnRonda", cartasJugadasEnRonda);
+            sessionStorage.setItem("horaInicialRondaVotacion", horaInicialRondaVotacion);
+            self.scene.stop();
+        })
+
+        this.socket.on('iniciarJuego', function (nombresJugadores, indiceCartaNegra, horaInicial, seleccionCartasInicial) {
+            self.scene.switch('Game');
+            for(var i = 0; i < nombresJugadores.length; i++){
+                if (nombresJugadores[i] == sessionStorage.getItem("nombre")){
+                    sessionStorage.setItem("idJugador", i);
+                }
+            }
+            sessionStorage.setItem("nombresJugadores", nombresJugadores);
+            sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
+            sessionStorage.setItem("horaInicio", horaInicial);
+            sessionStorage.setItem("seleccionCartasInicial", seleccionCartasInicial);
+            
+        })
+
+
+
     }
     
+
+
     update() {
         var horaActual = new Date().getTime();
         // text.setText('Event.progress: ' + timedEvent.getProgress().toString().substr(0, 4));
@@ -206,7 +233,6 @@ export default class Game extends Phaser.Scene {
         } else {
             rondaActiva = false;
             this.socket.emit('rondaTerminada');
-            this.scene.switch('Votacion');
         }
     }
 

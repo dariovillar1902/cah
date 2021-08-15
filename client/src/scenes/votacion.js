@@ -17,6 +17,7 @@ var cartaVotada;
 var votacionRealizada = false;
 var jugadorVotado;
 var cartaBlancaFinal = [];
+var nombreJugador;
 
 
 export default class Votacion extends Phaser.Scene {
@@ -31,40 +32,52 @@ export default class Votacion extends Phaser.Scene {
     }
 
     create() {
+        horaInicio = parseInt(sessionStorage.getItem("horaInicialRondaVotacion"));
+        text = this.add.text(55, 55, "60", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
+        let self = this;
+        this.socket = io('http://localhost:3000', {transports : ["websocket"] });
         var nombres = sessionStorage.getItem("nombresJugadores").split(",");
         for(var i = 0; i < nombres.length; i++){
             if (i == sessionStorage.getItem("idJugador")) {
-                var nombreJugador = nombres[i];
+                nombreJugador = nombres[i];
             }
         }
-        let self = this;
-        this.socket = io('http://localhost:3000', {transports : ["websocket"] })
-        this.socket.on('comienzaVotacion', function (ordenJugadoresEnRonda, cartasJugadasEnRonda) {
-            for (var i = 0; i < ordenJugadoresEnRonda.length; i++){
-                var cartaBlanca = `<div style='
-                background-color: white;
-                color: black;
-                border: 1px solid black;
-                border-radius: 1em;
-                width: 14.88em;
-                height: 20.78em;'> <p id="texto" style='
-                padding: .5em 1.5em 1em 1.5em;
-                font-family: sans-serif;
-                font-weight: bold;
-                font-size: 1.3em;
-                line-height: 1.3em;'> </p> </div>`;
-                cartaBlancaFinal[i] = self.add.dom(400 + i*200, 375).createFromHTML(cartaBlanca).setScale(0.7, 0.7).setInteractive();
-                cartaBlancaFinal[i].node.children[0].children[0].innerText = cartasJugadasEnRonda[i];
-                cartaBlancaFinal[i].on('pointerdown', function (pointer) {
-                    if (pointer.downElement.innerText !== ""){
+        var ordenJugadoresEnRonda = sessionStorage.getItem("ordenJugadoresEnRonda").split(",");
+        var cartasJugadasEnRonda = sessionStorage.getItem("cartasJugadasEnRonda").split(",");
+        console.log(ordenJugadoresEnRonda);
+        console.log(cartasJugadasEnRonda);
+        
+        for (var i = 0; i < ordenJugadoresEnRonda.length; i++){
+            var cartaBlanca = `<div style='
+            background-color: white;
+            color: black;
+            border: 1px solid black;
+            border-radius: 1em;
+            width: 14.88em;
+            height: 20.78em;'> <p id="texto" style='
+            padding: .5em 1.5em 1em 1.5em;
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 1.3em;
+            line-height: 1.3em;'> </p> </div>`;
+            cartaBlancaFinal[i] = this.add.dom(400 + i*200, 375).createFromHTML(cartaBlanca).setScale(0.7, 0.7).setInteractive();
+            cartaBlancaFinal[i].node.children[0].children[0].innerText = cartasJugadasEnRonda[i];
+            cartaBlancaFinal[i].on('pointerdown', function (pointer) {
+                if (pointer.downElement.innerText !== ""){
+                    if (votacionRealizada == false){
                         console.log(pointer.downElement.innerText);
                         cartaVotada = pointer.downElement.innerText;
                         votacionRealizada = true;
                         self.socket.emit('votoEmitido', cartaVotada, nombreJugador);
                     }
-                }, self);
-            }
-        })
+                }
+            }, self);
+        }
+
+        
+
+        
+        
         console.log("Ronda de votación activa");
         /* var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora prohibe _________ en los aviones.", 
         "Es una pena que hoy en día los jóvenes se están metiendo con _________.", 
@@ -237,6 +250,18 @@ export default class Votacion extends Phaser.Scene {
     }
     
     update() {
+        var horaActual = new Date().getTime();
+        var diferenciaS = (horaActual - horaInicio)/1000;
+        var segundosRestantes = 60 - diferenciaS;
+        if (segundosRestantes > 10) {
+            text.setText(segundosRestantes.toString().substr(0, 2));
+        } else if (segundosRestantes > 0 && segundosRestantes < 10) {
+            text.setText(segundosRestantes.toString().substr(0, 1));
+        } else {
+            rondaActiva = false;
+            this.socket.emit('rondaTerminada');
+        }
+
         /*
         var horaActual = new Date().getTime();
         // text.setText('Event.progress: ' + timedEvent.getProgress().toString().substr(0, 4));
