@@ -14,6 +14,7 @@ var cartasBlancasDeJugador = [];
 var cartaJugada = false;
 var rondaActiva = true;
 var textoCartaElegida;
+var textoCartaNegra;
 
 export default class Game extends Phaser.Scene {
     constructor() {
@@ -68,7 +69,7 @@ export default class Game extends Phaser.Scene {
         "Durante el sexo, me gusta pensar en _________.",
         "¿Qué terminó mi última relación?",
         "¿Qué es ese ruido?",
-        "_________. Así quiero morir",
+        "_________. Así quiero morir.",
         "¿Por qué estoy pegajoso?",
         "¿Cuál es el próximo juguete de la Cajita Feliz?",
         "¿De qué hay un montón en el cielo?",
@@ -93,7 +94,7 @@ export default class Game extends Phaser.Scene {
         "Durante el frecuentemente no tenido en cuenta Período Marrón de Picasso, él produjo cientos de pinturas de _________.",
         "¿Qué no querés encontrar en tu comida china?",
         "Tomo para olvidar _________.",
-        "_________. Chocá los 5, papá",
+        "_________. Chocá los 5, papá.",
         "Lo siento profesor, pero no pude completar mi tarea porque _________."
 
     ];
@@ -110,7 +111,9 @@ export default class Game extends Phaser.Scene {
                 font-size: 1.3em;
                 line-height: 1.3em;'> </p> </div>`;
         var cartaNegraFinal = this.add.dom(400, 375).createFromHTML(cartaNegraElegida).setScale(0.7, 0.7);
-        cartaNegraFinal.node.children[0].children[0].innerText = arrayCartasNegras[parseInt(sessionStorage.getItem("numeroCartaNegra"))];
+        textoCartaNegra = arrayCartasNegras[parseInt(sessionStorage.getItem("numeroCartaNegra"))];
+        cartaNegraFinal.node.children[0].children[0].innerText = textoCartaNegra;
+        sessionStorage.setItem("textoCartaNegra", textoCartaNegra);
         text = this.add.text(55, 55, "60", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         this.isPlayerA = false;
         this.opponentCards = [];
@@ -194,29 +197,13 @@ export default class Game extends Phaser.Scene {
         })
 
         this.socket.on('rondaTerminada', function (ordenJugadoresEnRonda, cartasJugadasEnRonda, horaInicialRondaVotacion) {
+            console.log("Activada ronda de votación");
             self.scene.switch('Votacion');
             sessionStorage.setItem("ordenJugadoresEnRonda", ordenJugadoresEnRonda);
             sessionStorage.setItem("cartasJugadasEnRonda", cartasJugadasEnRonda);
             sessionStorage.setItem("horaInicialRondaVotacion", horaInicialRondaVotacion);
             self.scene.stop();
         })
-
-        this.socket.on('iniciarJuego', function (nombresJugadores, indiceCartaNegra, horaInicial, seleccionCartasInicial) {
-            self.scene.switch('Game');
-            for(var i = 0; i < nombresJugadores.length; i++){
-                if (nombresJugadores[i] == sessionStorage.getItem("nombre")){
-                    sessionStorage.setItem("idJugador", i);
-                }
-            }
-            sessionStorage.setItem("nombresJugadores", nombresJugadores);
-            sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
-            sessionStorage.setItem("horaInicio", horaInicial);
-            sessionStorage.setItem("seleccionCartasInicial", seleccionCartasInicial);
-            
-        })
-
-
-
     }
     
 
@@ -226,7 +213,7 @@ export default class Game extends Phaser.Scene {
         // text.setText('Event.progress: ' + timedEvent.getProgress().toString().substr(0, 4));
         var diferenciaS = (horaActual - horaInicio)/1000;
         var segundosRestantes = 60 - diferenciaS;
-        if (segundosRestantes > 10) {
+        if (segundosRestantes >= 10) {
             text.setText(segundosRestantes.toString().substr(0, 2));
         } else if (segundosRestantes > 0 && segundosRestantes < 10) {
             text.setText(segundosRestantes.toString().substr(0, 1));

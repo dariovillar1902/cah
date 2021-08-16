@@ -44,7 +44,7 @@ var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora proh
         "Durante el sexo, me gusta pensar en _________.",
         "¿Qué terminó mi última relación?",
         "¿Qué es ese ruido?",
-        "_________. Así quiero morir",
+        "_________. Así quiero morir.",
         "¿Por qué estoy pegajoso?",
         "¿Cuál es el próximo juguete de la Cajita Feliz?",
         "¿De qué hay un montón en el cielo?",
@@ -69,7 +69,7 @@ var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora proh
         "Durante el frecuentemente no tenido en cuenta Período Marrón de Picasso, él produjo cientos de pinturas de _________.",
         "¿Qué no querés encontrar en tu comida china?",
         "Tomo para olvidar _________.",
-        "_________. Chocá los 5, papá",
+        "_________. Chocá los 5, papá.",
         "Lo siento profesor, pero no pude completar mi tarea porque _________."
     ];
 
@@ -84,7 +84,11 @@ var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora proh
     var horaInicial;
     var horaInicialRondaVotacion;
     var puntosDeCartas = [];
-    
+    var puntosJugadores = [];
+    var horaInicialRondaResultados;
+    var rondaActual = "salaDeEspera";
+    var ganadorDeRonda;
+    var cartaGanadoraDeRonda;
 
 io.on('connection', function (socket) {
     console.log('A user connected: ' + socket.id);
@@ -98,11 +102,13 @@ io.on('connection', function (socket) {
 
     socket.on('unidoASala', function (nombreJugador) {
         nombresJugadores.push(nombreJugador);
+        puntosJugadores.push(0);
         console.log(nombresJugadores);
         io.emit('unidoASala', nombresJugadores);
     });
 
     socket.on('iniciarJuego', function () {
+        rondaActual = "juego";
         horaInicial = new Date().getTime();
         for (i = 0; i < (nombresJugadores.length); i++){
             console.log("Cartas de: " + nombresJugadores[i]);
@@ -128,8 +134,12 @@ io.on('connection', function (socket) {
     });
 
     socket.on('rondaTerminada', function () {
-        horaInicialRondaVotacion = new Date().getTime();
-        io.emit('rondaTerminada', ordenJugadoresEnRonda, cartasJugadasEnRonda, horaInicialRondaVotacion);
+        if (rondaActual == "juego"){
+            rondaActual = "votacion";
+            console.log("Terminó ronda de juego");
+            horaInicialRondaVotacion = new Date().getTime();
+            io.emit('rondaTerminada', ordenJugadoresEnRonda, cartasJugadasEnRonda, horaInicialRondaVotacion);
+        }
     });
 
     socket.on('disconnect', function () {
@@ -145,7 +155,35 @@ io.on('connection', function (socket) {
                 console.log("El jugador " + nombreJugador + " votó la carta " + cartaVotada + " con el indice " + i + " perteneciente al jugador " + ordenJugadoresEnRonda[i]);
             }
         }
-        
+    });
+
+    socket.on('votacionTerminada', function () {
+        if (rondaActual == "votacion"){
+            rondaActual = "resultados";
+            horaInicialRondaResultados = new Date().getTime();
+            var valorMaximo = Math.max.apply(Math, puntosDeCartas);
+            for (var i = 0; i < puntosDeCartas.length; i++){
+                if (valorMaximo == puntosDeCartas[i]){
+                    ganadorDeRonda = ordenJugadoresEnRonda[i];
+                    cartaGanadoraDeRonda = cartasJugadasEnRonda[i];
+                    console.log("Ganador: " + ordenJugadoresEnRonda[i]);
+                }
+            }
+            for (var j = 0; j < nombresJugadores.length; j++){
+                if (ganadorDeRonda == nombresJugadores[j]){
+                    puntosJugadores[j] += 1;
+                    console.log(puntosJugadores);
+                }
+            }
+            io.emit('votacionTerminada', ganadorDeRonda, cartaGanadoraDeRonda, puntosJugadores, horaInicialRondaResultados);
+        }
+    });
+
+    socket.on('resultadosTerminados', function () {
+        if (rondaActual == "resultados"){
+            rondaActual = "juego";
+            io.emit('iniciarJuego', nombresJugadores, indiceCartaNegra, horaInicial, seleccionCartasInicial);
+        }
     });
 });
 
