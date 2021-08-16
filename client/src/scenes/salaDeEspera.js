@@ -38,6 +38,7 @@ export default class salaDeEspera extends Phaser.Scene {
                     salaIniciada = true;
                 } else if (salaIniciada == true){
                     self.socket.emit('iniciarJuego');
+                    self.socket.emit('iniciarRonda');
                 }
             }, self); 
         })
@@ -65,17 +66,20 @@ export default class salaDeEspera extends Phaser.Scene {
             self.add.text(400, 350 + 50*(i), nombresJugadores[i-1], {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         })
 
-        this.socket.on('iniciarJuego', function (nombresJugadores, indiceCartaNegra, horaInicial, seleccionCartasInicial) {
-            self.scene.switch('Game');
+        this.socket.on('iniciarJuego', function (nombresJugadores, seleccionCartasInicial) {
             for(var i = 0; i < nombresJugadores.length; i++){
                 if (nombresJugadores[i] == sessionStorage.getItem("nombre")){
                     sessionStorage.setItem("idJugador", i);
                 }
             }
             sessionStorage.setItem("nombresJugadores", nombresJugadores);
+            sessionStorage.setItem("seleccionCartasInicial", seleccionCartasInicial);
+        })
+
+        this.socket.on('iniciarRonda', function (indiceCartaNegra, horaInicial) {
+            self.scene.switch('Game');
             sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
             sessionStorage.setItem("horaInicio", horaInicial);
-            sessionStorage.setItem("seleccionCartasInicial", seleccionCartasInicial);
             self.scene.stop();
         })
         

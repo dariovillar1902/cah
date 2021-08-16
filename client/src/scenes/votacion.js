@@ -32,10 +32,10 @@ export default class Votacion extends Phaser.Scene {
     }
 
     create() {
-        horaInicio = parseInt(sessionStorage.getItem("horaInicialRondaVotacion"));
-        text = this.add.text(55, 55, "60", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         let self = this;
         this.socket = io('http://localhost:3000', {transports : ["websocket"] });
+        horaInicio = parseInt(sessionStorage.getItem("horaInicialRondaVotacion"));
+        text = this.add.text(55, 55, "60", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         var nombres = sessionStorage.getItem("nombresJugadores").split(",");
         for(var i = 0; i < nombres.length; i++){
             if (i == sessionStorage.getItem("idJugador")) {
@@ -58,8 +58,8 @@ export default class Votacion extends Phaser.Scene {
         font-weight: bold;
         font-size: 1.3em;
         line-height: 1.3em;'> </p> </div>`;
-var cartaNegraFinal = this.add.dom(200, 375).createFromHTML(cartaNegraElegida).setScale(0.7, 0.7);
-cartaNegraFinal.node.children[0].children[0].innerText = sessionStorage.getItem("textoCartaNegra");
+        var cartaNegraFinal = this.add.dom(200, 375).createFromHTML(cartaNegraElegida).setScale(0.7, 0.7);
+        cartaNegraFinal.node.children[0].children[0].innerText = sessionStorage.getItem("textoCartaNegra");
         for (var i = 0; i < ordenJugadoresEnRonda.length; i++){
             var cartaBlanca = `<div style='
             background-color: white;
@@ -88,20 +88,21 @@ cartaNegraFinal.node.children[0].children[0].innerText = sessionStorage.getItem(
         }
 
         this.socket.on('votacionTerminada', function (ganadorDeRonda, cartaGanadoraDeRonda, puntosJugadores, horaInicialRondaResultados) {
-            self.scene.switch('Resultados');
+            self.scene.run('Resultados');
             sessionStorage.setItem("ganadorDeRonda", ganadorDeRonda);
             sessionStorage.setItem("cartaGanadoraDeRonda", cartaGanadoraDeRonda);
             sessionStorage.setItem("puntosJugadores", puntosJugadores);
             sessionStorage.setItem("horaInicialRondaResultados", horaInicialRondaResultados);
-            self.scene.stop();
+            self.scene.sleep();
         })
 
     }
     
     update() {
+        console.log("Votacion");
         var horaActual = new Date().getTime();
         var diferenciaS = (horaActual - horaInicio)/1000;
-        var segundosRestantes = 60 - diferenciaS;
+        var segundosRestantes = 15 - diferenciaS;
         if (segundosRestantes >= 10) {
             text.setText(segundosRestantes.toString().substr(0, 2));
         } else if (segundosRestantes > 0 && segundosRestantes < 10) {

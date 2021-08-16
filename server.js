@@ -108,8 +108,6 @@ io.on('connection', function (socket) {
     });
 
     socket.on('iniciarJuego', function () {
-        rondaActual = "juego";
-        horaInicial = new Date().getTime();
         for (i = 0; i < (nombresJugadores.length); i++){
             console.log("Cartas de: " + nombresJugadores[i]);
             seleccionCartasInicial[i] = new Array();
@@ -119,7 +117,15 @@ io.on('connection', function (socket) {
             }
         }
         console.log(seleccionCartasInicial);
-        io.emit('iniciarJuego', nombresJugadores, indiceCartaNegra, horaInicial, seleccionCartasInicial);
+        io.emit('iniciarJuego', nombresJugadores, seleccionCartasInicial);
+    });
+
+    socket.on('iniciarRonda', function () {
+        if (rondaActual == "salaDeEspera" || rondaActual == "resultados"){
+            rondaActual = "juego";
+            horaInicial = new Date().getTime();
+            io.emit('iniciarRonda', indiceCartaNegra, horaInicial);
+        }
     });
 
     socket.on('cardPlayed', function (gameObject, nombreJugador, textoCartaElegida) {
@@ -176,13 +182,6 @@ io.on('connection', function (socket) {
                 }
             }
             io.emit('votacionTerminada', ganadorDeRonda, cartaGanadoraDeRonda, puntosJugadores, horaInicialRondaResultados);
-        }
-    });
-
-    socket.on('resultadosTerminados', function () {
-        if (rondaActual == "resultados"){
-            rondaActual = "juego";
-            io.emit('iniciarJuego', nombresJugadores, indiceCartaNegra, horaInicial, seleccionCartasInicial);
         }
     });
 });

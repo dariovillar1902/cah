@@ -35,6 +35,9 @@ export default class Resultados extends Phaser.Scene {
     }
 
     create() {
+        resultadosActivos = true;
+        let self = this;
+        this.socket = io('http://localhost:3000', {transports : ["websocket"] });
         jugadorGanador = sessionStorage.getItem("ganadorDeRonda");
         text = this.add.text(55, 55, "10", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         var cartaNegraElegida = `<div style='
@@ -75,10 +78,12 @@ export default class Resultados extends Phaser.Scene {
             textosPuntos[i] = this.add.text(325 + i*200, 600, puntos[i], {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         }
         horaInicio = parseInt(sessionStorage.getItem("horaInicialRondaResultados"));
-        this.socket = io('http://localhost:3000', {transports : ["websocket"] });
-        this.socket.on('resultadosTerminados', function () {
-            self.scene.switch('Game');
-            self.scene.stop();
+        
+        this.socket.on('iniciarRonda', function (indiceCartaNegra, horaInicial) {
+            self.scene.run('Game');
+            sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
+            sessionStorage.setItem("horaInicio", horaInicial);
+            self.scene.sleep();
         })
 
         /*
@@ -128,7 +133,6 @@ export default class Resultados extends Phaser.Scene {
         var horaActual = new Date().getTime();
         var diferenciaS = (horaActual - horaInicio)/1000;
         var segundosRestantes = 10 - diferenciaS;
-        console.log(segundosRestantes);
         if (segundosRestantes >= 10) {
             text.setText(segundosRestantes.toString().substr(0, 2));
         } else if (segundosRestantes > 0 && segundosRestantes < 10) {
@@ -136,7 +140,7 @@ export default class Resultados extends Phaser.Scene {
         } else {
             if (resultadosActivos == true) {
                 resultadosActivos = false;
-                this.socket.emit('resultadosTerminados');
+                this.socket.emit('iniciarRonda');
             } 
             
         }
