@@ -22,7 +22,7 @@ var nombreJugador;
 var textosNombres = [];
 var textosPuntos = [];
 var jugadorGanador;
-
+var numeroRonda;
 
 export default class Resultados extends Phaser.Scene {
     constructor() {
@@ -36,6 +36,8 @@ export default class Resultados extends Phaser.Scene {
     }
 
     create() {
+        numeroRonda = sessionStorage.getItem("numeroRonda");
+        console.log("Ronda " + numeroRonda);
         resultadosActivos = true;
         let self = this;
         this.socket = io('http://localhost:3000', {transports : ["websocket"] });
@@ -80,15 +82,17 @@ export default class Resultados extends Phaser.Scene {
         }
         horaInicio = parseInt(sessionStorage.getItem("horaInicialRondaResultados"));
         
-        this.socket.on('iniciarRonda', function (indiceCartaNegra, horaInicial) {
+        this.socket.on('iniciarRondasNuevas', function (indiceCartaNegra, horaInicial, numeroRonda) {
+            sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
+            sessionStorage.setItem("horaInicio", horaInicial);
+            sessionStorage.setItem("numeroRonda", numeroRonda);
+            console.log(sessionStorage.getItem("numeroCartaNegra"));
+            console.log(sessionStorage.getItem("horaInicio"));
+            console.log(sessionStorage.getItem("numeroRonda"));
             //if (resultadosActivos){
               //  resultadosActivos = false;
-                self.scene.switch('Game');
-                console.log("Evento recibido");
-                console.log(self.scene.isActive("salaDeEspera"));
-                console.log(self.scene.isSleeping("salaDeEspera"));
-                sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
-                sessionStorage.setItem("horaInicio", horaInicial);
+            self.scene.switch('Game');
+            console.log("Evento recibido");
            // }
         })
 
@@ -145,9 +149,10 @@ export default class Resultados extends Phaser.Scene {
             text.setText(segundosRestantes.toString().substr(0, 1));
         } else {
             if (resultadosActivos == true) {
-                resultadosActivos = false;
                 console.log("Evento emitido");
-                this.socket.emit('iniciarRonda');
+                this.socket.emit('iniciarRondasNuevas');
+                resultadosActivos = false;
+                this.scene.sleep();
             } 
             
         }

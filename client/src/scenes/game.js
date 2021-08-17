@@ -1,5 +1,3 @@
-import Card from '../helpers/card.js';
-
 import Zone from '../helpers/zone.js';
 
 import io from 'socket.io-client';
@@ -15,10 +13,9 @@ var cartaJugada = false;
 var rondaActiva = true;
 var textoCartaElegida;
 var textoCartaNegra;
-var numeroRonda = 0;
+var numeroRonda;
 let xCartaJugada;
 let yCartaJugada;
-var esPrimeraRonda = true;
 
 export default class Game extends Phaser.Scene {
     constructor() {
@@ -32,13 +29,16 @@ export default class Game extends Phaser.Scene {
     }
 
     create() {
-        cartaJugada = false;
-        numeroRonda += 1;
-        console.log("Ronda " + numeroRonda);
         rondaActiva = true;
         let self = this;
         this.socket = io('http://localhost:3000', {transports : ["websocket"] });
         horaInicio = parseInt(sessionStorage.getItem("horaInicio"));
+        cartaJugada = false;
+        numeroRonda = sessionStorage.getItem("numeroRonda");
+        console.log("Ronda " + numeroRonda);
+        console.log(sessionStorage.getItem("numeroCartaNegra"));
+        console.log(sessionStorage.getItem("horaInicio"));
+        console.log(sessionStorage.getItem("numeroRonda"));
         var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora prohibe _________ en los aviones.", 
         "Es una pena que hoy en día los jóvenes se están metiendo con _________.", 
         "En 1000 años, cuando el papel moneda sea una memoria distante, _________ va a ser nuestra moneda.", 
@@ -145,8 +145,6 @@ export default class Game extends Phaser.Scene {
 
         this.dealer = new Dealer(this);
         this.dealer.dealCards(cartasBlancasDeJugador);
-        console.log(sessionStorage.getItem("idJugador"));
-        
 
         this.socket.on('isPlayerA', function () {
         	self.isPlayerA = true;
@@ -157,7 +155,6 @@ export default class Game extends Phaser.Scene {
                 var textoCartaReemplazo = arrayCartasBlancas[indiceCartaBlanca];
                 for (var k = 0; k < 10; k++){
                     if (textoCartaElegida == cartasBlancasDeJugador[k]){
-                        console.log(k);
                         cartasBlancasDeJugador[k] = textoCartaReemplazo;
                     }
                 }
@@ -181,16 +178,12 @@ export default class Game extends Phaser.Scene {
         })    
 
         this.input.on('dragstart', function (pointer, gameObject) {
-            // self.node.children[0].children[0].innerText.disableInteractive(gameObject); 
-            //self.node.firstChild.firstElementChild.disableInteractive(gameObject);
-            //gameObject.setTint(0xff69b4);
             self.children.bringToTop(gameObject);
             xCartaJugada = gameObject.input.dragStartX;
             yCartaJugada = gameObject.input.dragStartY;
         })
 
         this.input.on('dragend', function (pointer, gameObject, dropped) {
-            //gameObject.setTint();
             if (!dropped) {
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;
@@ -203,7 +196,6 @@ export default class Game extends Phaser.Scene {
             gameObject.y = dropZone.y;
             gameObject.disableInteractive(); 
             textoCartaElegida = gameObject.node.children[0].children[0].innerText;
-            console.log(textoCartaElegida);
             self.socket.emit('cardPlayed', gameObject, nombreJugador, textoCartaElegida);
             cartaJugada = true;
         })
@@ -219,9 +211,7 @@ export default class Game extends Phaser.Scene {
 
 
     update() {
-        // console.log("Juego");
         var horaActual = new Date().getTime();
-        // text.setText('Event.progress: ' + timedEvent.getProgress().toString().substr(0, 4));
         var diferenciaS = (horaActual - horaInicio)/1000;
         var segundosRestantes = 15 - diferenciaS;
         if (segundosRestantes >= 10) {

@@ -121,17 +121,26 @@ io.on('connection', function (socket) {
         io.emit('iniciarJuego', nombresJugadores, seleccionCartasInicial);
     });
 
-    socket.on('iniciarRonda', function () {
+    socket.on('iniciarPrimeraRonda', function () {
         numeroRonda += 1;
-        if (rondaActual == "salaDeEspera" || rondaActual == "resultados"){
             cartasJugadasEnRonda = [];
             ordenJugadoresEnRonda = [];
             puntosDeCartas = [];
             var indiceCartaNegra = Math.floor(Math.random() * (arrayCartasNegras.length - 1));
             rondaActual = "juego";
             horaInicial = new Date().getTime();
-            io.emit('iniciarRonda', indiceCartaNegra, horaInicial);
-        }
+            io.emit('iniciarPrimeraRonda', indiceCartaNegra, horaInicial, numeroRonda);
+    });
+
+    socket.on('iniciarRondasNuevas', function () {
+        numeroRonda += 1;
+            cartasJugadasEnRonda = [];
+            ordenJugadoresEnRonda = [];
+            puntosDeCartas = [];
+            var indiceCartaNegra = Math.floor(Math.random() * (arrayCartasNegras.length - 1));
+            rondaActual = "juego";
+            horaInicial = new Date().getTime();
+            io.emit('iniciarRondasNuevas', indiceCartaNegra, horaInicial, numeroRonda);
     });
 
     socket.on('cardPlayed', function (gameObject, nombreJugador, textoCartaElegida) {

@@ -5,6 +5,7 @@ import WebFontFile from '../helpers/WebFontFile';
 import Phaser from "phaser";
 
 var salaIniciada = false;
+var esPrimeraRonda = true;
 
 export default class salaDeEspera extends Phaser.Scene {
     constructor() {
@@ -38,7 +39,7 @@ export default class salaDeEspera extends Phaser.Scene {
                     salaIniciada = true;
                 } else if (salaIniciada == true){
                     self.socket.emit('iniciarJuego');
-                    self.socket.emit('iniciarRonda');
+                    self.socket.emit('iniciarPrimeraRonda');
                 }
             }, self); 
         })
@@ -76,10 +77,12 @@ export default class salaDeEspera extends Phaser.Scene {
             sessionStorage.setItem("seleccionCartasInicial", seleccionCartasInicial);
         })
 
-        this.socket.on('iniciarRonda', function (indiceCartaNegra, horaInicial) {
-            self.scene.switch('Game');
-            sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
-            sessionStorage.setItem("horaInicio", horaInicial);
+        this.socket.on('iniciarPrimeraRonda', function (indiceCartaNegra, horaInicial, numeroRonda) {
+                self.scene.start('Game');
+                sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
+                sessionStorage.setItem("horaInicio", horaInicial);
+                sessionStorage.setItem("numeroRonda", numeroRonda);
+            
         })
         
     }

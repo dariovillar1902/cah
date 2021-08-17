@@ -73,7 +73,6 @@ export default class Dealer {
             }
         },
         this.cartaReemplazo = (x, y, textoCartaReemplazo) => {
-            console.log("Activado")
             let playerSprite;
             let opponentSprite;
             if (scene.isPlayerA) {

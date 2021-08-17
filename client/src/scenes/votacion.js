@@ -19,6 +19,7 @@ var jugadorVotado;
 var cartaBlancaFinal = [];
 var nombreJugador;
 var esPrimeraRonda = true;
+var numeroRonda;
 
 
 export default class Votacion extends Phaser.Scene {
@@ -33,6 +34,8 @@ export default class Votacion extends Phaser.Scene {
     }
 
     create() {
+        numeroRonda = sessionStorage.getItem("numeroRonda");
+        console.log("Ronda " + numeroRonda);
         votacionActiva = true;
         votacionRealizada = false;
         let self = this;
