@@ -16,6 +16,9 @@ var rondaActiva = true;
 var textoCartaElegida;
 var textoCartaNegra;
 var numeroRonda = 0;
+let xCartaJugada;
+let yCartaJugada;
+var esPrimeraRonda = true;
 
 export default class Game extends Phaser.Scene {
     constructor() {
@@ -29,7 +32,9 @@ export default class Game extends Phaser.Scene {
     }
 
     create() {
+        cartaJugada = false;
         numeroRonda += 1;
+        console.log("Ronda " + numeroRonda);
         rondaActiva = true;
         let self = this;
         this.socket = io('http://localhost:3000', {transports : ["websocket"] });
@@ -150,6 +155,12 @@ export default class Game extends Phaser.Scene {
         this.socket.on('cartaReemplazo', function (gameObject, indiceCartaBlanca) {
             if (cartaJugada == true) {
                 var textoCartaReemplazo = arrayCartasBlancas[indiceCartaBlanca];
+                for (var k = 0; k < 10; k++){
+                    if (textoCartaElegida == cartasBlancasDeJugador[k]){
+                        console.log(k);
+                        cartasBlancasDeJugador[k] = textoCartaReemplazo;
+                    }
+                }
                 self.dealer.cartaReemplazo(xCartaJugada, yCartaJugada, textoCartaReemplazo);
                 cartaJugada = false;
             }
@@ -162,8 +173,7 @@ export default class Game extends Phaser.Scene {
         this.zone = new Zone(this);
         this.dropZone = this.zone.renderZone();
         this.outline = this.zone.renderOutline(this.dropZone);
-        let xCartaJugada;
-        let yCartaJugada;
+
 
         this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
             gameObject.x = dragX;
@@ -199,7 +209,6 @@ export default class Game extends Phaser.Scene {
         })
 
         this.socket.on('rondaTerminada', function (ordenJugadoresEnRonda, cartasJugadasEnRonda, horaInicialRondaVotacion) {
-            console.log("Hola");
             self.scene.run('Votacion');
             sessionStorage.setItem("ordenJugadoresEnRonda", ordenJugadoresEnRonda);
             sessionStorage.setItem("cartasJugadasEnRonda", cartasJugadasEnRonda);
@@ -211,7 +220,7 @@ export default class Game extends Phaser.Scene {
 
 
     update() {
-        console.log("Juego");
+        // console.log("Juego");
         var horaActual = new Date().getTime();
         // text.setText('Event.progress: ' + timedEvent.getProgress().toString().substr(0, 4));
         var diferenciaS = (horaActual - horaInicio)/1000;

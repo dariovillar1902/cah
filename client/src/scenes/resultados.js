@@ -7,6 +7,7 @@ import io from 'socket.io-client';
 import Dealer from '../helpers/dealer.js';
 
 import WebFontFile from '../helpers/WebFontFile';
+import salaDeEspera from './salaDeEspera.js';
 
 var text;
 var horaInicio;
@@ -81,6 +82,9 @@ export default class Resultados extends Phaser.Scene {
         
         this.socket.on('iniciarRonda', function (indiceCartaNegra, horaInicial) {
             self.scene.run('Game');
+            console.log("Evento recibido");
+            console.log(self.scene.isActive("salaDeEspera"));
+            console.log(self.scene.isSleeping("salaDeEspera"));
             sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
             sessionStorage.setItem("horaInicio", horaInicial);
             self.scene.sleep();
@@ -140,6 +144,7 @@ export default class Resultados extends Phaser.Scene {
         } else {
             if (resultadosActivos == true) {
                 resultadosActivos = false;
+                console.log("Evento emitido");
                 this.socket.emit('iniciarRonda');
             } 
             

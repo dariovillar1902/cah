@@ -18,6 +18,7 @@ var votacionRealizada = false;
 var jugadorVotado;
 var cartaBlancaFinal = [];
 var nombreJugador;
+var esPrimeraRonda = true;
 
 
 export default class Votacion extends Phaser.Scene {
@@ -32,6 +33,8 @@ export default class Votacion extends Phaser.Scene {
     }
 
     create() {
+        votacionActiva = true;
+        votacionRealizada = false;
         let self = this;
         this.socket = io('http://localhost:3000', {transports : ["websocket"] });
         horaInicio = parseInt(sessionStorage.getItem("horaInicialRondaVotacion"));
@@ -99,7 +102,7 @@ export default class Votacion extends Phaser.Scene {
     }
     
     update() {
-        console.log("Votacion");
+        // console.log("Votacion");
         var horaActual = new Date().getTime();
         var diferenciaS = (horaActual - horaInicio)/1000;
         var segundosRestantes = 15 - diferenciaS;
