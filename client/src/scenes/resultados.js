@@ -81,13 +81,15 @@ export default class Resultados extends Phaser.Scene {
         horaInicio = parseInt(sessionStorage.getItem("horaInicialRondaResultados"));
         
         this.socket.on('iniciarRonda', function (indiceCartaNegra, horaInicial) {
-            self.scene.run('Game');
-            console.log("Evento recibido");
-            console.log(self.scene.isActive("salaDeEspera"));
-            console.log(self.scene.isSleeping("salaDeEspera"));
-            sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
-            sessionStorage.setItem("horaInicio", horaInicial);
-            self.scene.sleep();
+            //if (resultadosActivos){
+              //  resultadosActivos = false;
+                self.scene.switch('Game');
+                console.log("Evento recibido");
+                console.log(self.scene.isActive("salaDeEspera"));
+                console.log(self.scene.isSleeping("salaDeEspera"));
+                sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
+                sessionStorage.setItem("horaInicio", horaInicial);
+           // }
         })
 
         /*

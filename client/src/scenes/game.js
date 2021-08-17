@@ -209,11 +209,10 @@ export default class Game extends Phaser.Scene {
         })
 
         this.socket.on('rondaTerminada', function (ordenJugadoresEnRonda, cartasJugadasEnRonda, horaInicialRondaVotacion) {
-            self.scene.run('Votacion');
+            self.scene.switch('Votacion');
             sessionStorage.setItem("ordenJugadoresEnRonda", ordenJugadoresEnRonda);
             sessionStorage.setItem("cartasJugadasEnRonda", cartasJugadasEnRonda);
             sessionStorage.setItem("horaInicialRondaVotacion", horaInicialRondaVotacion);
-            self.scene.sleep();
         })
     }
     

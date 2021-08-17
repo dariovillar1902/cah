@@ -80,7 +80,6 @@ export default class salaDeEspera extends Phaser.Scene {
             self.scene.switch('Game');
             sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
             sessionStorage.setItem("horaInicio", horaInicial);
-            self.scene.stop();
         })
         
     }

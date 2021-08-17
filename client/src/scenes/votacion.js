@@ -91,12 +91,11 @@ export default class Votacion extends Phaser.Scene {
         }
 
         this.socket.on('votacionTerminada', function (ganadorDeRonda, cartaGanadoraDeRonda, puntosJugadores, horaInicialRondaResultados) {
-            self.scene.run('Resultados');
+            self.scene.switch('Resultados');
             sessionStorage.setItem("ganadorDeRonda", ganadorDeRonda);
             sessionStorage.setItem("cartaGanadoraDeRonda", cartaGanadoraDeRonda);
             sessionStorage.setItem("puntosJugadores", puntosJugadores);
             sessionStorage.setItem("horaInicialRondaResultados", horaInicialRondaResultados);
-            self.scene.sleep();
         })
 
     }
