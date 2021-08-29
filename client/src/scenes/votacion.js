@@ -1,33 +1,22 @@
-import Card from '../helpers/card.js';
-
-import Zone from '../helpers/zone.js';
-
 import io from 'socket.io-client';
 
-import Dealer from '../helpers/dealer.js';
-
 import WebFontFile from '../helpers/WebFontFile';
+
 import Resultados from './resultados.js';
 
 var text;
 var horaInicio;
-var cartasBlancasDeJugador = [];
-var cartaJugada = false;
 var votacionActiva = true;
 var cartaVotada;
 var votacionRealizada = false;
-var jugadorVotado;
 var cartaBlancaFinal = [];
 var nombreJugador;
-var esPrimeraRonda = true;
 var numeroRonda;
 var keyResultados;
-
 
 export default class Votacion extends Phaser.Scene {
     constructor() {
         super({
-            key: 'Votacion'
         });
     }
 
@@ -45,6 +34,7 @@ export default class Votacion extends Phaser.Scene {
         horaInicio = parseInt(sessionStorage.getItem("horaInicialRondaVotacion"));
         text = this.add.text(55, 55, "60", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         var nombres = sessionStorage.getItem("nombresJugadores").split(",");
+        var cantidadDeVotosEmitidos = 0;
        
         for(var i = 0; i < nombres.length; i++){
             if (i == sessionStorage.getItem("idJugador")) {
@@ -55,6 +45,10 @@ export default class Votacion extends Phaser.Scene {
         var cartasJugadasEnRonda = sessionStorage.getItem("cartasJugadasEnRonda").split(",");
         console.log(ordenJugadoresEnRonda);
         console.log(cartasJugadasEnRonda);
+        var textoRonda = this.add.text(1150, 20, "Ronda", {fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 'bold' });
+        textoRonda.setText("Ronda " + numeroRonda);
+        var textoJugadores = this.add.text(1150, 40, "", {fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 'bold' });
+        textoJugadores.setText(nombres.length + "/" + nombres.length + " restantes");
         var cartaNegraElegida = `<div style='
         background-color: black;
         color: white;
@@ -91,10 +85,21 @@ export default class Votacion extends Phaser.Scene {
                         cartaVotada = pointer.downElement.innerText;
                         votacionRealizada = true;
                         self.socket.emit('votoEmitido', cartaVotada, nombreJugador);
+                        var textoGanador = self.add.text(600, 100, "Ya votaste", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
+                        cantidadDeVotosEmitidos += 1;
+                        textoJugadores.setText(nombres.length - cantidadDeVotosEmitidos + "/" + nombres.length + " restantes");
                     }
                 }
             }, self);
         }
+
+        this.socket.on('votoEmitidoPorOponente', function () {
+            cantidadDeVotosEmitidos += 1;
+            textoJugadores.setText(nombres.length - cantidadDeVotosEmitidos + "/" + nombres.length + " restantes");
+            if (cantidadDeVotosEmitidos == nombres.length - 1){
+                console.log("Todos votaron");
+            }
+        })
 
         this.socket.on('votacionTerminada', function (ganadorDeRonda, cartaGanadoraDeRonda, puntosJugadores, horaInicialRondaResultados) {
             keyResultados = 'Resultados' + numeroRonda; 
@@ -111,10 +116,9 @@ export default class Votacion extends Phaser.Scene {
     }
     
     update() {
-        // console.log("Votacion");
         var horaActual = new Date().getTime();
         var diferenciaS = (horaActual - horaInicio)/1000;
-        var segundosRestantes = 15 - diferenciaS;
+        var segundosRestantes = 60 - diferenciaS;
         if (segundosRestantes >= 10) {
             text.setText(segundosRestantes.toString().substr(0, 2));
         } else if (segundosRestantes > 0 && segundosRestantes < 10) {

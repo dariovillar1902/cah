@@ -44,7 +44,8 @@ export default class Resultados extends Phaser.Scene {
         let self = this;
         this.socket = io('http://localhost:3000', {transports : ["websocket"] });
         jugadorGanador = sessionStorage.getItem("ganadorDeRonda");
-         
+        var textoRonda = this.add.text(1150, 20, "Ronda", {fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 'bold' });
+        textoRonda.setText("Ronda " + numeroRonda);
         text = this.add.text(55, 55, "10", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         var cartaNegraElegida = `<div style='
         background-color: black;

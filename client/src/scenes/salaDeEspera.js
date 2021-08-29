@@ -5,7 +5,6 @@ import WebFontFile from '../helpers/WebFontFile';
 import Phaser from "phaser";
 import Game from "../scenes/game";
 var salaIniciada = false;
-var esPrimeraRonda = true;
 
 export default class salaDeEspera extends Phaser.Scene {
     constructor() {

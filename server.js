@@ -90,6 +90,8 @@ var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora proh
     var ganadorDeRonda;
     var cartaGanadoraDeRonda;
     var numeroRonda = 0;
+    var cantidadDeCartasJugadas = 0;
+    var cantidadDeVotos = 0;
 
 io.on('connection', function (socket) {
     console.log('A user connected: ' + socket.id);
@@ -122,6 +124,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('iniciarRonda', function () {
+        cantidadDeCartasJugadas = 0;
         if (rondaActual === 'salaDeEspera' || rondaActual === 'resultados'){
             numeroRonda += 1;
             cartasJugadasEnRonda = [];
@@ -143,15 +146,21 @@ io.on('connection', function (socket) {
         indiceCartaBlanca = Math.floor(Math.random() * (arrayCartasBlancas.length - 1));
         io.emit('cartaReemplazo', gameObject, indiceCartaBlanca);
         socket.broadcast.emit('cartaJugadaPorOponente');
-    });
-
-    socket.on('rondaTerminada', function () {
-        if (rondaActual == "juego"){
+        cantidadDeCartasJugadas += 1;
+        if (cantidadDeCartasJugadas == nombresJugadores.length){
+            console.log("Terminó ronda porque todos jugaron");
             rondaActual = "votacion";
-            console.log("Terminó ronda de juego");
+            cantidadDeVotos = 0;
             horaInicialRondaVotacion = new Date().getTime();
             io.emit('rondaTerminada', ordenJugadoresEnRonda, cartasJugadasEnRonda, horaInicialRondaVotacion);
         }
+    });
+
+    socket.on('rondaTerminada', function () {
+            rondaActual = "votacion";
+            cantidadDeVotos = 0;
+            horaInicialRondaVotacion = new Date().getTime();
+            io.emit('rondaTerminada', ordenJugadoresEnRonda, cartasJugadasEnRonda, horaInicialRondaVotacion);
     });
 
     socket.on('disconnect', function () {
@@ -167,10 +176,11 @@ io.on('connection', function (socket) {
                 console.log("El jugador " + nombreJugador + " votó la carta " + cartaVotada + " con el indice " + i + " perteneciente al jugador " + ordenJugadoresEnRonda[i]);
             }
         }
-    });
-
-    socket.on('votacionTerminada', function () {
-        if (rondaActual == "votacion"){
+        socket.broadcast.emit('votoEmitidoPorOponente');
+        cantidadDeVotos += 1;
+        console.log(cantidadDeVotos);
+        if (cantidadDeVotos == nombresJugadores.length){
+            console.log("Terminó ronda porque todos votaron");
             rondaActual = "resultados";
             horaInicialRondaResultados = new Date().getTime();
             var valorMaximo = Math.max.apply(Math, puntosDeCartas);
@@ -189,6 +199,26 @@ io.on('connection', function (socket) {
             }
             io.emit('votacionTerminada', ganadorDeRonda, cartaGanadoraDeRonda, puntosJugadores, horaInicialRondaResultados);
         }
+    });
+
+    socket.on('votacionTerminada', function () {
+            rondaActual = "resultados";
+            horaInicialRondaResultados = new Date().getTime();
+            var valorMaximo = Math.max.apply(Math, puntosDeCartas);
+            for (var i = 0; i < puntosDeCartas.length; i++){
+                if (valorMaximo == puntosDeCartas[i]){
+                    ganadorDeRonda = ordenJugadoresEnRonda[i];
+                    cartaGanadoraDeRonda = cartasJugadasEnRonda[i];
+                    console.log("Ganador: " + ordenJugadoresEnRonda[i]);
+                }
+            }
+            for (var j = 0; j < nombresJugadores.length; j++){
+                if (ganadorDeRonda == nombresJugadores[j]){
+                    puntosJugadores[j] += 1;
+                    console.log(puntosJugadores);
+                }
+            }
+            io.emit('votacionTerminada', ganadorDeRonda, cartaGanadoraDeRonda, puntosJugadores, horaInicialRondaResultados);
     });
 });
 

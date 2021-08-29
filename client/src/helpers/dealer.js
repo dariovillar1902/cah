@@ -136,5 +136,26 @@ export default class Dealer {
                 playerCard.render(x, y, playerSprite, textoCartaReemplazo);
 
         }
+        this.cartaJugadaPorOponente = (cantidadDeCartasJugadas) => {
+            let opponentSprite = `<div style='
+                background-color: white;
+                color: black;
+                border: 1px solid black;
+                border-radius: 1em;
+                width: 14.88em;
+                height: 20.78em; 
+                display: flex; 
+                align-items: center;'> <p id="texto" style='
+                text-align: center; 
+                font-family: sans-serif; 
+                font-weight: bold; 
+                font-size: 4em; 
+                vertical-align: middle; 
+                margin: auto !important;'> HDP </p> </div>`;
+        
+                let opponentCard = new Card2(scene);
+                scene.opponentCards2.push(opponentCard.render(925 + (cantidadDeCartasJugadas * 50), 375, opponentSprite, "HDP").disableInteractive());
+
+        }
     }
 }
