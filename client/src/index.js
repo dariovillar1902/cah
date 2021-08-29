@@ -13,7 +13,7 @@ const config = {
         createContainer: true
     },
     scene: [
-        salaDeEspera, Game, Votacion, Resultados
+        salaDeEspera
     ]
 };
 

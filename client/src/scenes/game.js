@@ -5,6 +5,8 @@ import io from 'socket.io-client';
 import Dealer from '../helpers/dealer.js';
 
 import WebFontFile from '../helpers/WebFontFile';
+import Votacion from "../scenes/votacion";
+import Resultados from "../scenes/resultados";
 
 var text;
 var horaInicio;
@@ -16,11 +18,11 @@ var textoCartaNegra;
 var numeroRonda;
 let xCartaJugada;
 let yCartaJugada;
-
+var keyVotacion;
+   
 export default class Game extends Phaser.Scene {
     constructor() {
         super({
-            key: 'Game'
         });
     }
 
@@ -36,9 +38,8 @@ export default class Game extends Phaser.Scene {
         cartaJugada = false;
         numeroRonda = sessionStorage.getItem("numeroRonda");
         console.log("Ronda " + numeroRonda);
-        console.log(sessionStorage.getItem("numeroCartaNegra"));
-        console.log(sessionStorage.getItem("horaInicio"));
-        console.log(sessionStorage.getItem("numeroRonda"));
+        
+        
         var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora prohibe _________ en los aviones.", 
         "Es una pena que hoy en día los jóvenes se están metiendo con _________.", 
         "En 1000 años, cuando el papel moneda sea una memoria distante, _________ va a ser nuestra moneda.", 
@@ -201,15 +202,19 @@ export default class Game extends Phaser.Scene {
         })
 
         this.socket.on('rondaTerminada', function (ordenJugadoresEnRonda, cartasJugadasEnRonda, horaInicialRondaVotacion) {
-            self.scene.switch('Votacion');
+            keyVotacion = 'Votacion' + numeroRonda; 
+            console.log(keyVotacion);
+            self.scene.add(keyVotacion, Votacion, true);
             sessionStorage.setItem("ordenJugadoresEnRonda", ordenJugadoresEnRonda);
             sessionStorage.setItem("cartasJugadasEnRonda", cartasJugadasEnRonda);
             sessionStorage.setItem("horaInicialRondaVotacion", horaInicialRondaVotacion);
+            self.scene.stop();
+            self.socket.disconnect();
+            self.scene.remove();
+            // self.scene.destroy();
         })
     }
     
-
-
     update() {
         var horaActual = new Date().getTime();
         var diferenciaS = (horaActual - horaInicio)/1000;
@@ -225,6 +230,5 @@ export default class Game extends Phaser.Scene {
             }
         }
     }
-
 
 }

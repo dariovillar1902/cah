@@ -8,6 +8,7 @@ import Dealer from '../helpers/dealer.js';
 
 import WebFontFile from '../helpers/WebFontFile';
 import salaDeEspera from './salaDeEspera.js';
+import Game from "../scenes/game";
 
 var text;
 var horaInicio;
@@ -23,6 +24,7 @@ var textosNombres = [];
 var textosPuntos = [];
 var jugadorGanador;
 var numeroRonda;
+var keyJuego;
 
 export default class Resultados extends Phaser.Scene {
     constructor() {
@@ -42,6 +44,7 @@ export default class Resultados extends Phaser.Scene {
         let self = this;
         this.socket = io('http://localhost:3000', {transports : ["websocket"] });
         jugadorGanador = sessionStorage.getItem("ganadorDeRonda");
+         
         text = this.add.text(55, 55, "10", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         var cartaNegraElegida = `<div style='
         background-color: black;
@@ -82,17 +85,23 @@ export default class Resultados extends Phaser.Scene {
         }
         horaInicio = parseInt(sessionStorage.getItem("horaInicialRondaResultados"));
         
-        this.socket.on('iniciarRondasNuevas', function (indiceCartaNegra, horaInicial, numeroRonda) {
+        this.socket.on('iniciarRonda', function (indiceCartaNegra, horaInicial, numeroRonda) {
             sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
             sessionStorage.setItem("horaInicio", horaInicial);
             sessionStorage.setItem("numeroRonda", numeroRonda);
             console.log(sessionStorage.getItem("numeroCartaNegra"));
             console.log(sessionStorage.getItem("horaInicio"));
             console.log(sessionStorage.getItem("numeroRonda"));
+            keyJuego = 'Game' + sessionStorage.getItem("numeroRonda");
+            console.log(keyJuego);
             //if (resultadosActivos){
               //  resultadosActivos = false;
-            self.scene.switch('Game');
+            self.scene.add(keyJuego, Game, true);
             console.log("Evento recibido");
+            console.log("Instancia 2 iniciada");
+            self.scene.stop();
+            self.socket.disconnect();
+            self.scene.remove();
            // }
         })
 
@@ -150,9 +159,8 @@ export default class Resultados extends Phaser.Scene {
         } else {
             if (resultadosActivos == true) {
                 console.log("Evento emitido");
-                this.socket.emit('iniciarRondasNuevas');
+                this.socket.emit('iniciarRonda');
                 resultadosActivos = false;
-                this.scene.sleep();
             } 
             
         }

@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import WebFontFile from '../helpers/WebFontFile';
 
 import Phaser from "phaser";
-
+import Game from "../scenes/game";
 var salaIniciada = false;
 var esPrimeraRonda = true;
 
@@ -39,7 +39,7 @@ export default class salaDeEspera extends Phaser.Scene {
                     salaIniciada = true;
                 } else if (salaIniciada == true){
                     self.socket.emit('iniciarJuego');
-                    self.socket.emit('iniciarPrimeraRonda');
+                    self.socket.emit('iniciarRonda');
                 }
             }, self); 
         })
@@ -75,14 +75,15 @@ export default class salaDeEspera extends Phaser.Scene {
             }
             sessionStorage.setItem("nombresJugadores", nombresJugadores);
             sessionStorage.setItem("seleccionCartasInicial", seleccionCartasInicial);
+            self.scene.add('Game1', Game, true);
+            self.scene.stop();
         })
 
-        this.socket.on('iniciarPrimeraRonda', function (indiceCartaNegra, horaInicial, numeroRonda) {
-                self.scene.start('Game');
+        this.socket.on('iniciarRonda', function (indiceCartaNegra, horaInicial, numeroRonda) {
                 sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
                 sessionStorage.setItem("horaInicio", horaInicial);
                 sessionStorage.setItem("numeroRonda", numeroRonda);
-            
+                console.log("Instancia 1 iniciada");
         })
         
     }

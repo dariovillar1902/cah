@@ -7,6 +7,7 @@ import io from 'socket.io-client';
 import Dealer from '../helpers/dealer.js';
 
 import WebFontFile from '../helpers/WebFontFile';
+import Resultados from './resultados.js';
 
 var text;
 var horaInicio;
@@ -20,6 +21,7 @@ var cartaBlancaFinal = [];
 var nombreJugador;
 var esPrimeraRonda = true;
 var numeroRonda;
+var keyResultados;
 
 
 export default class Votacion extends Phaser.Scene {
@@ -43,6 +45,7 @@ export default class Votacion extends Phaser.Scene {
         horaInicio = parseInt(sessionStorage.getItem("horaInicialRondaVotacion"));
         text = this.add.text(55, 55, "60", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         var nombres = sessionStorage.getItem("nombresJugadores").split(",");
+       
         for(var i = 0; i < nombres.length; i++){
             if (i == sessionStorage.getItem("idJugador")) {
                 nombreJugador = nombres[i];
@@ -94,11 +97,15 @@ export default class Votacion extends Phaser.Scene {
         }
 
         this.socket.on('votacionTerminada', function (ganadorDeRonda, cartaGanadoraDeRonda, puntosJugadores, horaInicialRondaResultados) {
-            self.scene.switch('Resultados');
+            keyResultados = 'Resultados' + numeroRonda; 
+            self.scene.add(keyResultados, Resultados, true);
             sessionStorage.setItem("ganadorDeRonda", ganadorDeRonda);
             sessionStorage.setItem("cartaGanadoraDeRonda", cartaGanadoraDeRonda);
             sessionStorage.setItem("puntosJugadores", puntosJugadores);
             sessionStorage.setItem("horaInicialRondaResultados", horaInicialRondaResultados);
+            self.scene.stop();
+            self.socket.disconnect();
+            self.scene.remove();
         })
 
     }
