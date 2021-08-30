@@ -65,7 +65,7 @@ export default class Votacion extends Phaser.Scene {
         cartaNegraFinal.node.children[0].children[0].innerText = sessionStorage.getItem("textoCartaNegra");
         for (var i = 0; i < ordenJugadoresEnRonda.length; i++){
             var cartaBlanca = `<div style='
-            background-color: white;
+            background-color: rgba(255, 255, 255, 1);
             color: black;
             border: 1px solid black;
             border-radius: 1em;
@@ -76,8 +76,26 @@ export default class Votacion extends Phaser.Scene {
             font-weight: bold;
             font-size: 1.3em;
             line-height: 1.3em;'> </p> </div>`;
-            cartaBlancaFinal[i] = this.add.dom(400 + i*200, 375).createFromHTML(cartaBlanca).setScale(0.7, 0.7).setInteractive();
+            var cartaDeJugador = `<div style='
+            background-color: rgba(255, 255, 255, 0.15);
+            color: black;
+            border: 1px solid black;
+            border-radius: 1em;
+            width: 14.88em;
+            height: 20.78em;'> <p id="texto" style='
+            padding: .5em 1.5em 1em 1.5em;
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 1.3em;
+            line-height: 1.3em;'> </p> </div>`;
+            if (cartasJugadasEnRonda[i] == sessionStorage.getItem("textoCartaElegida")) {
+                cartaBlancaFinal[i] = this.add.dom(400 + i*200, 375).createFromHTML(cartaDeJugador).setScale(0.7, 0.7);
+            } else {
+                cartaBlancaFinal[i] = this.add.dom(400 + i*200, 375).createFromHTML(cartaBlanca).setScale(0.7, 0.7).setInteractive();
+            }
+            
             cartaBlancaFinal[i].node.children[0].children[0].innerText = cartasJugadasEnRonda[i];
+
             cartaBlancaFinal[i].on('pointerdown', function (pointer) {
                 if (pointer.downElement.innerText !== ""){
                     if (votacionRealizada == false){

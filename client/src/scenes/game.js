@@ -210,6 +210,7 @@ export default class Game extends Phaser.Scene {
             gameObject.y = dropZone.y;
             gameObject.disableInteractive(); 
             textoCartaElegida = gameObject.node.children[0].children[0].innerText;
+            sessionStorage.setItem("textoCartaElegida", textoCartaElegida);
             self.socket.emit('cardPlayed', gameObject, nombreJugador, textoCartaElegida);
             cartaJugada = true;
         })
