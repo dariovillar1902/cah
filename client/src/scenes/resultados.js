@@ -61,8 +61,8 @@ export default class Resultados extends Phaser.Scene {
         line-height: 1.3em;'> </p> </div>`;
         var cartaNegraFinal = this.add.dom(500, 300).createFromHTML(cartaNegraElegida).setScale(0.7, 0.7);
         cartaNegraFinal.node.children[0].children[0].innerText = sessionStorage.getItem("textoCartaNegra");
-        var textoGanador = this.add.text(600, 100, "Ganador: ", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
-        var nombreGanador = this.add.text(750, 100, "a", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
+        var textoGanador = this.add.text(475, 100, "Ganó esta ronda: ", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
+        var nombreGanador = this.add.text(725, 100, "a", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         nombreGanador.setText(jugadorGanador);
         var cartaBlanca = `<div style='
             background-color: white;
@@ -80,9 +80,37 @@ export default class Resultados extends Phaser.Scene {
         cartaGanador.node.children[0].children[0].innerText = sessionStorage.getItem("cartaGanadoraDeRonda");
         var nombres = sessionStorage.getItem("nombresJugadores").split(",");
         var puntos = sessionStorage.getItem("puntosJugadores").split(",");
+        var xPuntuacion;
+        switch (nombres.length) { // variable de la que dependen los casos, puede ser número o texto
+            case 0:
+                xPuntuacion = 700;
+                break;
+            case 1:
+                xPuntuacion = 600;
+                break;
+            case 2:
+                xPuntuacion = 500;
+                break;
+            case 3:
+                xPuntuacion = 400;
+                break;
+            case 4:
+                xPuntuacion = 300;
+                break;
+            case 5:
+                xPuntuacion = 200;
+                break;
+            case 6:
+                xPuntuacion = 100;
+                break;
+        
+            default:
+                xPuntuacion = 100;
+                break;
+        }
         for (var i = 0; i < nombres.length; i++){
-            textosNombres[i] = this.add.text(300 + i*200, 500, nombres[i], {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
-            textosPuntos[i] = this.add.text(325 + i*200, 600, puntos[i], {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
+            textosNombres[i] = this.add.text(xPuntuacion + i*200, 500, nombres[i], {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
+            textosPuntos[i] = this.add.text(xPuntuacion + 25 + i*200, 550, puntos[i], {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         }
         horaInicio = parseInt(sessionStorage.getItem("horaInicialRondaResultados"));
         

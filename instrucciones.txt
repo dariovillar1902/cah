@@ -1,3 +1,4 @@
 Para hacer que el juego arranque:
 Servidor: terminal en carpeta CAH2, npm run start
 Instancia del juego: localhost:8080 o terminal en carpeta CAH2/client, npm start
+PROBADO PARA HASTA 6 PERSONAS.

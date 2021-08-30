@@ -61,7 +61,11 @@ export default class Votacion extends Phaser.Scene {
         font-weight: bold;
         font-size: 1.3em;
         line-height: 1.3em;'> </p> </div>`;
-        var cartaNegraFinal = this.add.dom(200, 375).createFromHTML(cartaNegraElegida).setScale(0.7, 0.7);
+        if (nombres.length <= 4){
+            var cartaNegraFinal = this.add.dom(225, 375).createFromHTML(cartaNegraElegida).setScale(0.7, 0.7); 
+        } else {
+            var cartaNegraFinal = this.add.dom(225, 175).createFromHTML(cartaNegraElegida).setScale(0.7, 0.7);
+        }
         cartaNegraFinal.node.children[0].children[0].innerText = sessionStorage.getItem("textoCartaNegra");
         for (var i = 0; i < ordenJugadoresEnRonda.length; i++){
             var cartaBlanca = `<div style='
@@ -77,7 +81,7 @@ export default class Votacion extends Phaser.Scene {
             font-size: 1.3em;
             line-height: 1.3em;'> </p> </div>`;
             var cartaDeJugador = `<div style='
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(255, 255, 255, 0.5);
             color: black;
             border: 1px solid black;
             border-radius: 1em;
@@ -88,10 +92,20 @@ export default class Votacion extends Phaser.Scene {
             font-weight: bold;
             font-size: 1.3em;
             line-height: 1.3em;'> </p> </div>`;
-            if (cartasJugadasEnRonda[i] == sessionStorage.getItem("textoCartaElegida")) {
-                cartaBlancaFinal[i] = this.add.dom(400 + i*200, 375).createFromHTML(cartaDeJugador).setScale(0.7, 0.7);
+            console.log(Math.trunc(i/4));
+            console.log(375-(200*Math.trunc(i/4)));
+            if (nombres.length <= 4){
+                if (cartasJugadasEnRonda[i] == sessionStorage.getItem("textoCartaElegida")) {
+                    cartaBlancaFinal[i] = this.add.dom(425 + i*200, 375).createFromHTML(cartaDeJugador).setScale(0.7, 0.7);
+                } else {
+                    cartaBlancaFinal[i] = this.add.dom(425 + i*200, 375).createFromHTML(cartaBlanca).setScale(0.7, 0.7).setInteractive();
+                }
             } else {
-                cartaBlancaFinal[i] = this.add.dom(400 + i*200, 375).createFromHTML(cartaBlanca).setScale(0.7, 0.7).setInteractive();
+                if (cartasJugadasEnRonda[i] == sessionStorage.getItem("textoCartaElegida")) {
+                    cartaBlancaFinal[i] = this.add.dom(425 + (i-4*Math.trunc(i/4))*200, 175+(250*Math.trunc(i/4))).createFromHTML(cartaDeJugador).setScale(0.7, 0.7);
+                } else {
+                    cartaBlancaFinal[i] = this.add.dom(425 + (i-4*Math.trunc(i/4))*200, 175+(250*Math.trunc(i/4))).createFromHTML(cartaBlanca).setScale(0.7, 0.7).setInteractive();
+                }
             }
             
             cartaBlancaFinal[i].node.children[0].children[0].innerText = cartasJugadasEnRonda[i];
