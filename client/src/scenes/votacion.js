@@ -13,6 +13,7 @@ var cartaBlancaFinal = [];
 var nombreJugador;
 var numeroRonda;
 var keyResultados;
+var menuDesplegado = false;
 
 export default class Votacion extends Phaser.Scene {
     constructor() {
@@ -22,6 +23,10 @@ export default class Votacion extends Phaser.Scene {
 
     preload() {
         this.load.addFile(new WebFontFile(this.load, 'Work Sans'));
+        this.load.html("iconoauto", "../src/assets/iconoauto.html");
+        this.load.html("iconoluna", "../src/assets/iconoluna.html");
+        this.load.html("iconomenu", "../src/assets/iconomenu.html");
+        this.load.html("iconomezcla", "../src/assets/iconomezcla.html");
     }
 
     create() {
@@ -67,6 +72,41 @@ export default class Votacion extends Phaser.Scene {
             var cartaNegraFinal = this.add.dom(225, 175).createFromHTML(cartaNegraElegida).setScale(0.7, 0.7);
         }
         cartaNegraFinal.node.children[0].children[0].innerText = sessionStorage.getItem("textoCartaNegra");
+        self.menuJuego = self.add.dom(1240, 740).createFromCache('iconomenu').setInteractive();
+        self.modoClaro = self.add.dom(1240, 560).createFromCache('iconoluna').setInteractive();
+        self.mezclarCartas = self.add.dom(1240, 620).createFromCache('iconomezcla').setInteractive();
+        self.modoAuto = self.add.dom(1240, 680).createFromCache('iconoauto').setInteractive(); 
+        
+        self.modoClaro.on('pointerdown', function (pointer) {
+            console.log("Modo claro activado");
+        }, self); 
+        self.mezclarCartas.on('pointerdown', function (pointer) {
+            console.log("Mezcla de cartas activada");
+        }, self); 
+        self.modoAuto.on('pointerdown', function (pointer) {
+            console.log("Modo automático activado");
+        }, self);
+                self.menuJuego.on('pointerdown', function (pointer) {
+                    console.log("Menú activado");
+                    if (menuDesplegado === false){
+                        menuDesplegado = true;
+                        self.modoClaro.node.children[2].style.visibility = "visible";
+                        self.modoClaro.setInteractive();
+                        self.mezclarCartas.node.children[2].style.visibility = "visible";
+                        self.mezclarCartas.setInteractive();
+                        self.modoAuto.node.children[2].style.visibility = "visible"; 
+                        self.modoAuto.setInteractive();
+                    } else {
+                        menuDesplegado = false;
+                        self.modoClaro.node.children[2].style.visibility = "hidden";
+                        self.mezclarCartas.node.children[2].style.visibility = "hidden";
+                        self.modoAuto.node.children[2].style.visibility = "hidden";
+                        self.modoClaro.disableInteractive();
+                        self.mezclarCartas.disableInteractive();
+                        self.modoAuto.disableInteractive();
+                    }
+                }, self);
+                
         for (var i = 0; i < ordenJugadoresEnRonda.length; i++){
             var cartaBlanca = `<div style='
             background-color: rgba(255, 255, 255, 1);

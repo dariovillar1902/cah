@@ -2,12 +2,28 @@
     <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
         <style type="text/css">
-        i {
+        .iconomezcla {
+            display: flex;
             color: white;
+            width: 50px;
+            height: 50px;
+            font-size: 25px;
+            background-color: #F9E784;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            pointer-events: all !important;
+            visibility: hidden;
+        }
+
+        .fa-random {
+            pointer-events: all !important;
         }
         </style>
     </head>
     <body>
-        <i class="fas fa-random"></i>
+        <div class="iconomezcla">
+            <a><i class="fas fa-random"></i></a>
+        </div>
     </body>
 </html>

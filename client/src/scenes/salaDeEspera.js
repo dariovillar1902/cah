@@ -5,6 +5,7 @@ import WebFontFile from '../helpers/WebFontFile';
 import Phaser from "phaser";
 import Game from "../scenes/game";
 var salaIniciada = false;
+var menuDesplegado = false;
 
 export default class salaDeEspera extends Phaser.Scene {
     constructor() {
@@ -33,8 +34,12 @@ export default class salaDeEspera extends Phaser.Scene {
             console.log("Anfitrion");
             var formularioNombre = "<form style='display: flex; flex-direction: column'><input type='text' placeholder='Ingresar nombre' style='background-color: black;color: white;border: 1px solid white;border-radius: 1em;width: 500px;height: 70px;font-family: sans-serif;font-size: 30px;text-align: center; margin: 10px 0'></form>";
             var botonConfirmar ="<form style='display: flex; flex-direction: column'><input type='button' value='Crear sala' id='botonEntrar' style='background-color: black;color: white;border: 1px solid white;border-radius: 1em;width: 500px;height: 70px;font-family: sans-serif;font-size: 30px;text-align: center;'></form>";
+            var botonConfirmar2 ="<form style='display: flex; flex-direction: column'><input type='button' value='Unirse a una sala' id='botonEntrar' style='background-color: black;color: white;border: 1px solid white;border-radius: 1em;width: 500px;height: 70px;font-family: sans-serif;font-size: 30px;text-align: center;'></form>";
+            var botonConfirmar3 ="<form style='display: flex; flex-direction: column'><input type='button' value='Opciones de juego' id='botonEntrar' style='background-color: black;color: white;border: 1px solid white;border-radius: 1em;width: 500px;height: 70px;font-family: sans-serif;font-size: 30px;text-align: center;'></form>";
             var ingresarNombre = self.add.dom(640, 150).createFromHTML(formularioNombre);
             self.startBtn = self.add.dom(640, 250).createFromHTML(botonConfirmar).setInteractive();
+            self.startBtn2 = self.add.dom(640, 350).createFromHTML(botonConfirmar2).setInteractive();
+            self.startBtn3 = self.add.dom(640, 450).createFromHTML(botonConfirmar3).setInteractive();
             self.startBtn.on('pointerdown', function (pointer) {
                 if (salaIniciada == false){
                     var nombreJugador = ingresarNombre.node.children[0].children[0].value;
@@ -65,15 +70,47 @@ export default class salaDeEspera extends Phaser.Scene {
             }
         })
 
-        self.add.text(400, 350, "En la sala", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
-        var menuJuego = self.add.dom(1100, 700).createFromCache('iconomenu');
-        var modoClaro = self.add.dom(1150, 700).createFromCache('iconoluna');
-        var mezclarCartas = self.add.dom(1200, 700).createFromCache('iconomezcla');
-        var modoAuto = self.add.dom(1250, 700).createFromCache('iconoauto');
+        self.add.text(400, 550, "En la sala", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
+        self.menuJuego = self.add.dom(1240, 740).createFromCache('iconomenu').setInteractive();
+        self.modoClaro = self.add.dom(1240, 560).createFromCache('iconoluna').setInteractive();
+        self.mezclarCartas = self.add.dom(1240, 620).createFromCache('iconomezcla').setInteractive();
+        self.modoAuto = self.add.dom(1240, 680).createFromCache('iconoauto').setInteractive(); 
+        
+        self.modoClaro.on('pointerdown', function (pointer) {
+            console.log("Modo claro activado");
+        }, self); 
+        self.mezclarCartas.on('pointerdown', function (pointer) {
+            console.log("Mezcla de cartas activada");
+        }, self); 
+        self.modoAuto.on('pointerdown', function (pointer) {
+            console.log("Modo automático activado");
+        }, self);
+                self.menuJuego.on('pointerdown', function (pointer) {
+                    console.log("Menú activado");
+                    if (menuDesplegado === false){
+                        menuDesplegado = true;
+                        self.modoClaro.node.children[2].style.visibility = "visible";
+                        self.modoClaro.setInteractive();
+                        self.mezclarCartas.node.children[2].style.visibility = "visible";
+                        self.mezclarCartas.setInteractive();
+                        self.modoAuto.node.children[2].style.visibility = "visible"; 
+                        self.modoAuto.setInteractive();
+                    } else {
+                        menuDesplegado = false;
+                        self.modoClaro.node.children[2].style.visibility = "hidden";
+                        self.mezclarCartas.node.children[2].style.visibility = "hidden";
+                        self.modoAuto.node.children[2].style.visibility = "hidden";
+                        self.modoClaro.disableInteractive();
+                        self.mezclarCartas.disableInteractive();
+                        self.modoAuto.disableInteractive();
+                    }
+                }, self);
+                
+                
 
         this.socket.on('unidoASala', function (nombresJugadores) {
             var i = nombresJugadores.length;
-            self.add.text(400, 350 + 50*(i), nombresJugadores[i-1], {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
+            self.add.text(400, 600 + 50*(i), nombresJugadores[i-1], {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         })
 
         this.socket.on('iniciarJuego', function (nombresJugadores, seleccionCartasInicial) {
@@ -98,6 +135,7 @@ export default class salaDeEspera extends Phaser.Scene {
     }
     
     update() {
+
     }
 
 
