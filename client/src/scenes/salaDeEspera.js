@@ -15,6 +15,12 @@ export default class salaDeEspera extends Phaser.Scene {
 
     preload() {
         this.load.addFile(new WebFontFile(this.load, 'Work Sans'));
+        this.load.html("iconoauto", "../src/assets/iconoauto.html");
+        this.load.html("iconoluna", "../src/assets/iconoluna.html");
+        this.load.html("iconomenu", "../src/assets/iconomenu.html");
+        this.load.html("iconomezcla", "../src/assets/iconomezcla.html");
+
+
     }
 
     create() {
@@ -60,7 +66,11 @@ export default class salaDeEspera extends Phaser.Scene {
         })
 
         self.add.text(400, 350, "En la sala", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
-
+        var menuJuego = self.add.dom(1100, 700).createFromCache('iconomenu');
+        var modoClaro = self.add.dom(1150, 700).createFromCache('iconoluna');
+        var mezclarCartas = self.add.dom(1200, 700).createFromCache('iconomezcla');
+        var modoAuto = self.add.dom(1250, 700).createFromCache('iconoauto');
+        
         this.socket.on('unidoASala', function (nombresJugadores) {
             var i = nombresJugadores.length;
             self.add.text(400, 350 + 50*(i), nombresJugadores[i-1], {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
