@@ -95,6 +95,8 @@ var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora proh
     var cantidadDeCartasJugadas = 0;
     var cantidadDeVotos = 0;
     var cantidadDeCartasInactivas = 0;
+    var listaSalas = [];
+    var jugadorAutorizado = false;
 
     for (var i=0; i < arrayCartasNegras.length; i++){
         estadoCartasNegras.push("Activa");
@@ -108,17 +110,38 @@ io.on('connection', function (socket) {
     console.log('A user connected: ' + socket.id);
     players.push(socket.id);
     
-    if (players.length === 1) {
+    /* if (players.length === 1) {
         io.emit('isPlayerA');
     } else {
         io.emit('otroJugador');
     };
+    */
+    socket.on('salaCreada', function(){
+        function randomString(length, chars) {
+            var result = '';
+            for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+            return result;
+        }
+        var codigoSala = randomString(6, '0123456789abcdefghijklmnopqrstuvwxyz');
+        listaSalas.push(codigoSala);
+        io.emit('infoSala', codigoSala);
+    });
 
-    socket.on('unidoASala', function (nombreJugador) {
+    socket.on('unidoASala', function (nombreJugador, codigoIngresadoDeSala) {
+        for (var i=0; i<listaSalas.length; i++){
+            if (codigoIngresadoDeSala == listaSalas[i]){
+                jugadorAutorizado = true;
+                console.log("Código correcto");
+            } else {
+                jugadorAutorizado = false;
+                console.log("Código incorrecto");
+            }
+        }
+        
         nombresJugadores.push(nombreJugador);
         puntosJugadores.push(0);
         console.log(nombresJugadores);
-        io.emit('unidoASala', nombresJugadores);
+        io.emit('unidoASala', nombresJugadores, codigoIngresadoDeSala, jugadorAutorizado);
     });
 
     socket.on('iniciarJuego', function () {
