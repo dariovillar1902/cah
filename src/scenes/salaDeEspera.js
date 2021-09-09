@@ -5,6 +5,7 @@ import WebFontFile from '../helpers/WebFontFile';
 import Phaser from "phaser";
 import Game from "../scenes/game";
 import Opciones from "../scenes/opciones";
+const path = require('path');
 
 var salaIniciada = false;
 var menuDesplegado = false;
