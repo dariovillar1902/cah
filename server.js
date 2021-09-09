@@ -17,7 +17,10 @@ console.log("Servidor funciona");
 });
 
 const http = require('http').createServer(express);
-const io = require('socket.io')(http);
+var io = require('socket.io')(http, {
+    path: '/socket.io-client'
+  });
+io.set('transports', ['websocket']);
 let players = [];
 let nombresJugadores = [];
 var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora prohibe _________ en los aviones.", 

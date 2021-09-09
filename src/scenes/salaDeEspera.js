@@ -33,10 +33,10 @@ export default class salaDeEspera extends Phaser.Scene {
     create() {
         let self = this;
 
-        this.socket = io("https://hdpjuego.herokuapp.com", {
-            // WARNING: in that case, there is no fallback to long-polling
-            transports: [ "websocket" ] // or [ "websocket", "polling" ] (the order matters)
-          });
+          this.socket = io('hdpjuego.herokuapp.com', {
+            path: '/socket.io-client',
+            transports: ['websocket']
+        })
         inicioJuego = false;
         
         this.socket.on('isPlayerA', function () {
