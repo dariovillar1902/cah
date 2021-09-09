@@ -12,6 +12,7 @@ var modoAuto;
 var modoClaro;
 var nombreIngresado = false;
 var inicioJuego;
+const PORT = process.env.PORT || 8080;
 
 export default class salaDeEspera extends Phaser.Scene {
     constructor() {
@@ -31,7 +32,7 @@ export default class salaDeEspera extends Phaser.Scene {
     create() {
         let self = this;
 
-        this.socket = io('http://localhost:3000', {transports : ["websocket"] })
+        this.socket = io(PORT, {transports : ["websocket"] })
         inicioJuego = false;
         
         this.socket.on('isPlayerA', function () {
