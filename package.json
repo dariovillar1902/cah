@@ -6,17 +6,20 @@
   "dependencies": {
     "@babel/polyfill": "^7.10.4",
     "@babel/runtime": "^7.10.4",
+    "bufferutil": "^4.0.3",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
     "express": "^4.17.1",
     "phaser": "^3.23.0",
     "socket.io": "^4.2.0",
+    "socket.io-client": "^4.1.3",
     "stylelint": "^13.3.3",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-scss": "^3.17.2",
-    "socket.io-client": "^4.1.3",
-    "webfontloader": "^1.6.28"
+    "utf-8-validate": "^5.0.5",
+    "webfontloader": "^1.6.28",
+    "ws": "^8.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.10.4",
