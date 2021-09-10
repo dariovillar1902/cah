@@ -1,4 +1,4 @@
-import io from 'socket.io-client';
+import io from 'socket.io';
 
 import WebFontFile from '../helpers/WebFontFile';
 
@@ -29,12 +29,12 @@ export default class salaDeEspera extends Phaser.Scene {
         this.load.html("iconomenu", "../src/assets/iconomenu.html");
         this.load.html("iconomezcla", "../src/assets/iconomezcla.html");
     }
-
+    // hdpjuego.herokuapp.com:36655
     create() {
         let self = this;
         console.log("Hola");
-          this.socket = io('hdpjuego.herokuapp.com:36655', {
-            path: '/socket.io-client',
+          this.socket = io('http://localhost:3000', {
+            // path: '/socket.io',
             transports: ['websocket']
         })
         inicioJuego = false;
