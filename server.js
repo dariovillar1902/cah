@@ -17,7 +17,17 @@ console.log("Servidor funciona");
 });
 
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+    // Now, the CORS config.
+    // You could either use the new `cors` property...
+    cors: {
+      origins: "*:*",
+      methods: ["GET", "POST"],
+      allowedHeaders: ["content-type"],
+      pingTimeout: 7000,
+      pingInterval: 3000
+    }
+});
 let players = [];
 let nombresJugadores = [];
 var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora prohibe _________ en los aviones.", 
