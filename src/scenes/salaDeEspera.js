@@ -33,7 +33,7 @@ export default class salaDeEspera extends Phaser.Scene {
     create() {
         let self = this;
         console.log("Hola");
-          this.socket = io('http://localhost:3000', {
+          this.socket = io('hdpjuego.herokuapp.com:36655', {
             // path: '/socket.io',
             transports: ['websocket']
         })
