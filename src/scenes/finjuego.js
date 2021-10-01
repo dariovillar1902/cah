@@ -36,7 +36,7 @@ export default class finJuego extends Phaser.Scene {
 
     create() {
         let self = this;
-        this.socket = io('http://localhost:3000', {transports : ["websocket"] });
+        this.socket = io.connect();
         self.scene.remove('salaDeEspera');
         text = this.add.text(55, 55, "10", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         var textoGanador = this.add.text(475, 100, "Ganó el juego: ", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });

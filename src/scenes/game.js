@@ -46,7 +46,7 @@ export default class Game extends Phaser.Scene {
 
     create() {
         let self = this;
-        this.socket = io('http://localhost:3000', {transports : ["websocket"] });
+        this.socket = io.connect();
         rondaActiva = true;
         mezclaActivada = false;
         repeticionReemplazo = 0;

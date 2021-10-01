@@ -42,7 +42,7 @@ export default class Resultados extends Phaser.Scene {
         console.log("Ronda " + numeroRonda);
         resultadosActivos = true;
         let self = this;
-        this.socket = io('http://localhost:3000', {transports : ["websocket"] });
+        this.socket = io.connect();
         jugadorGanador = sessionStorage.getItem("ganadorDeRonda");
         var textoRonda = this.add.text(1150, 20, "Ronda", {fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 'bold' });
         textoRonda.setText("Ronda " + numeroRonda);

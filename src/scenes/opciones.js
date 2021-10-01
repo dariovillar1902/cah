@@ -43,7 +43,7 @@ export default class Opciones extends Phaser.Scene {
 
     create() {
         let self = this;
-        this.socket = io('http://localhost:3000', {transports : ["websocket"] });
+        this.socket = io.connect();
 
         self.add.text(500, 50, "Opciones de sala: ", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
 

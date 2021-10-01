@@ -40,7 +40,7 @@ export default class Votacion extends Phaser.Scene {
         votacionActiva = true;
         votacionRealizada = false;
         let self = this;
-        this.socket = io('http://localhost:3000', {transports : ["websocket"] });
+        this.socket = io.connect();
         horaInicio = parseInt(sessionStorage.getItem("horaInicialRondaVotacion"));
         text = this.add.text(55, 55, "60", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         var nombres = sessionStorage.getItem("nombresJugadores").split(",");
