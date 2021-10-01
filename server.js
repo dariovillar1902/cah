@@ -7,10 +7,8 @@ const HTML_FILE = path.join(DIST_DIR, 'index.html');
 
 const PORT = process.env.PORT || 12103;
 
-var app = express();
 var server = http.createServer(app);
 var io = require("socket.io")(server);
-
 
 let players = [];
 let nombresJugadores = [];
