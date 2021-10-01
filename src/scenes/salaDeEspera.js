@@ -33,7 +33,7 @@ export default class salaDeEspera extends Phaser.Scene {
     create() {
         let self = this;
         console.log("Hola");
-          this.socket = io();
+        this.socket = io.connect();
         inicioJuego = false;
         console.log(this.socket);
         this.socket.on('isPlayerA', function () {
