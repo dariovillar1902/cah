@@ -1,12 +1,16 @@
 var http = require("http");
-var path = require("path");
-var express = require("express");
+const path = require('path');
+const express = require('express');
+const app = express();
+const DIST_DIR = path.join(__dirname, '/dist');
+const HTML_FILE = path.join(DIST_DIR, 'index.html');
 
 const PORT = process.env.PORT || 12103;
 
 var app = express();
 var server = http.createServer(app);
 var io = require("socket.io")(server);
+
 
 let players = [];
 let nombresJugadores = [];
@@ -287,12 +291,13 @@ var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora proh
                 }
                 io.emit('votacionTerminada', ganadorDeRonda, cartaGanadoraDeRonda, puntosJugadores, horaInicialRondaResultados);
         });
-      });
-      
-      var staticPath = path.resolve(__dirname, "");
-      app.use(express.static(staticPath));
-      
-      server.listen(PORT, function() {
-        console.log("Server is listening at http://localhost:" + PORT);
-      });
-
+    });
+    
+    app.use(express.static(DIST_DIR));
+    app.get('*', (req, res) => {
+      res.sendFile(HTML_FILE);
+    });
+    
+    server.listen(PORT, function() {
+      console.log("Server is listening at http://localhost:" + PORT);
+    });
