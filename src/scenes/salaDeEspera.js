@@ -73,7 +73,8 @@ export default class salaDeEspera extends Phaser.Scene {
         })
 
         this.socket.on('otroJugador', function () {
-           if (inicioJuego == false && self.isPlayerA == false) {
+            if(self.isPlayerA && inicioJuego == false) {
+            } else if (inicioJuego == false) {
                 var formularioNombre = "<div style='display: flex; flex-direction: column'><input type='text' placeholder='Ingresar nombre' style='background-color: black;color: white;border: 1px solid white;border-radius: 1em;width: 500px;height: 70px;font-family: sans-serif;font-size: 30px;text-align: center; margin: 10px 0'></div>";
                 var formularioNombre2 = "<div style='display: flex; flex-direction: column'><input type='text' placeholder='Ingresar código de sala' style='background-color: black;color: white;border: 1px solid white;border-radius: 1em;width: 500px;height: 70px;font-family: sans-serif;font-size: 30px;text-align: center; margin: 10px 0'></div>";
                 var botonConfirmar ="<div style='display: flex; flex-direction: column'><input type='button' value='Entrar a sala' id='botonEntrar' style='background-color: black;color: white;border: 1px solid white;border-radius: 1em;width: 500px;height: 70px;font-family: sans-serif;font-size: 30px;text-align: center;'></div>";
