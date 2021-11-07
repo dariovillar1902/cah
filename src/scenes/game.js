@@ -34,14 +34,14 @@ export default class Game extends Phaser.Scene {
 
     preload() {
         this.load.addFile(new WebFontFile(this.load, 'Work Sans'));
-        this.load.html("iconoauto", "../src/assets/iconoauto.html");
-        this.load.html("iconoluna", "../src/assets/iconoluna.html");
-        this.load.html("iconomenu", "../src/assets/iconomenu.html");
-        this.load.html("iconomezcla", "../src/assets/iconomezcla.html");
-        this.load.html("iconoautoblanco", "../src/assets/iconoautoblanco.html");
-        this.load.html("iconolunablanco", "../src/assets/iconolunablanco.html");
-        this.load.html("iconomenublanco", "../src/assets/iconomenublanco.html");
-        this.load.html("iconomezclablanco", "../src/assets/iconomezclablanco.html");
+        this.load.html("iconoauto", "iconoauto.html");
+        this.load.html("iconoluna", "iconoluna.html");
+        this.load.html("iconomenu", "iconomenu.html");
+        this.load.html("iconomezcla", "iconomezcla.html");
+        this.load.html("iconoautoblanco", "iconoautoblanco.html");
+        this.load.html("iconolunablanco", "iconolunablanco.html");
+        this.load.html("iconomenublanco", "iconomenublanco.html");
+        this.load.html("iconomezclablanco", "iconomezclablanco.html");
     }
 
     create() {

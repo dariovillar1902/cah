@@ -29,10 +29,10 @@ export default class Resultados extends Phaser.Scene {
 
     preload() {
         this.load.addFile(new WebFontFile(this.load, 'Work Sans'));
-        this.load.html("iconoauto", "/iconoauto.html");
-        this.load.html("iconoluna", "/iconoluna.html");
-        this.load.html("iconomenu", "/iconomenu.html");
-        this.load.html("iconomezcla", "/iconomezcla.html");
+        this.load.html("iconoauto", "iconoauto.html");
+        this.load.html("iconoluna", "iconoluna.html");
+        this.load.html("iconomenu", "iconomenu.html");
+        this.load.html("iconomezcla", "iconomezcla.html");
     }
 
     create() {
