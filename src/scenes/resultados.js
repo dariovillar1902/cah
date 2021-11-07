@@ -1,9 +1,6 @@
 import io from 'socket.io-client';
-
 import WebFontFile from '../helpers/WebFontFile';
-
 import Game from "../scenes/game";
-
 import finJuego from './finjuego.js';
 
 var text;
@@ -39,7 +36,6 @@ export default class Resultados extends Phaser.Scene {
         numeroRonda = sessionStorage.getItem("numeroRonda");
         modoAuto = sessionStorage.getItem("modoAuto");
         modoClaro = sessionStorage.getItem("modoClaro");
-        console.log("Ronda " + numeroRonda);
         resultadosActivos = true;
         let self = this;
         this.socket = io.connect();
@@ -119,7 +115,6 @@ export default class Resultados extends Phaser.Scene {
         horaInicio = parseInt(sessionStorage.getItem("horaInicialRondaResultados"));
         self.menuJuego = self.add.dom(1240, 740).createFromCache('iconomenu').setInteractive();
         self.modoClaro = self.add.dom(1240, 620).createFromCache('iconoluna').setInteractive();
-        //self.mezclarCartas = self.add.dom(1240, 620).createFromCache('iconomezcla').setInteractive();
         self.modoAuto = self.add.dom(1240, 680).createFromCache('iconoauto').setInteractive(); 
         self.modoClaro.on('pointerdown', function () {
             if (modoClaro == 'true'){
@@ -134,9 +129,6 @@ export default class Resultados extends Phaser.Scene {
                 self.modoClaro.node.children[2].style.color = "black";
             }
         }, self); 
-        //self.mezclarCartas.on('pointerdown', function (pointer) {
-         //   console.log("Mezcla de cartas activada");
-        //}, self); 
         self.modoAuto.on('pointerdown', function () {
             if (modoAuto == 'true'){
                 modoAuto = 'false';
@@ -151,13 +143,10 @@ export default class Resultados extends Phaser.Scene {
             }
         }, self);
                 self.menuJuego.on('pointerdown', function () {
-                    console.log("Menú activado");
                     if (menuDesplegado === false){
                         menuDesplegado = true;
                         self.modoClaro.node.children[2].style.visibility = "visible";
                         self.modoClaro.setInteractive();
-                       // self.mezclarCartas.node.children[2].style.visibility = "visible";
-                       // self.mezclarCartas.setInteractive();
                         self.modoAuto.node.children[2].style.visibility = "visible"; 
                         self.modoAuto.setInteractive();
                         if (modoClaro == 'true'){
@@ -177,10 +166,8 @@ export default class Resultados extends Phaser.Scene {
                     } else {
                         menuDesplegado = false;
                         self.modoClaro.node.children[2].style.visibility = "hidden";
-                        //self.mezclarCartas.node.children[2].style.visibility = "hidden";
                         self.modoAuto.node.children[2].style.visibility = "hidden";
                         self.modoClaro.disableInteractive();
-                        //self.mezclarCartas.disableInteractive();
                         self.modoAuto.disableInteractive();
                     }
                 }, self);
@@ -189,20 +176,11 @@ export default class Resultados extends Phaser.Scene {
             sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
             sessionStorage.setItem("horaInicio", horaInicial);
             sessionStorage.setItem("numeroRonda", numeroRonda);
-            console.log(sessionStorage.getItem("numeroCartaNegra"));
-            console.log(sessionStorage.getItem("horaInicio"));
-            console.log(sessionStorage.getItem("numeroRonda"));
             keyJuego = 'Game' + sessionStorage.getItem("numeroRonda");
-            console.log(keyJuego);
-            //if (resultadosActivos){
-              //  resultadosActivos = false;
             self.scene.add(keyJuego, Game, true);
-            console.log("Evento recibido");
-            console.log("Instancia 2 iniciada");
             self.scene.stop();
             self.socket.disconnect();
             self.scene.remove();
-           // }
         })
 
         this.socket.on('finJuego', function (ganadorJuego) {
@@ -213,47 +191,6 @@ export default class Resultados extends Phaser.Scene {
             self.scene.remove();
         })
 
-        /*
-        let self = this;
-        this.socket = io('http://localhost:3000', {transports : ["websocket"] });
-        var nombres = sessionStorage.getItem("nombresJugadores").split(",");
-        for(var i = 0; i < nombres.length; i++){
-            if (i == sessionStorage.getItem("idJugador")) {
-                nombreJugador = nombres[i];
-            }
-        }
-        var ordenJugadoresEnRonda = sessionStorage.getItem("ordenJugadoresEnRonda").split(",");
-        var cartasJugadasEnRonda = sessionStorage.getItem("cartasJugadasEnRonda").split(",");
-        console.log(ordenJugadoresEnRonda);
-        console.log(cartasJugadasEnRonda);
-        
-        for (var i = 0; i < ordenJugadoresEnRonda.length; i++){
-            var cartaBlanca = `<div style='
-            background-color: white;
-            color: black;
-            border: 1px solid black;
-            border-radius: 1em;
-            width: 14.88em;
-            height: 20.78em;'> <p id="texto" style='
-            padding: .5em 1.5em 1em 1.5em;
-            font-family: sans-serif;
-            font-weight: bold;
-            font-size: 1.3em;
-            line-height: 1.3em;'> </p> </div>`;
-            cartaBlancaFinal[i] = this.add.dom(400 + i*200, 375).createFromHTML(cartaBlanca).setScale(0.7, 0.7).setInteractive();
-            cartaBlancaFinal[i].node.children[0].children[0].innerText = cartasJugadasEnRonda[i];
-            cartaBlancaFinal[i].on('pointerdown', function (pointer) {
-                if (pointer.downElement.innerText !== ""){
-                    if (votacionRealizada == false){
-                        console.log(pointer.downElement.innerText);
-                        cartaVotada = pointer.downElement.innerText;
-                        votacionRealizada = true;
-                        self.socket.emit('votoEmitido', cartaVotada, nombreJugador);
-                    }
-                }
-            }, self);
-        }
-        */
     }
     
     update() {
@@ -266,11 +203,9 @@ export default class Resultados extends Phaser.Scene {
             text.setText(segundosRestantes.toString().substr(0, 1));
         } else {
             if (resultadosActivos == true && terminoJuego == false) {
-                console.log("Evento emitido");
                 this.socket.emit('iniciarRonda');
                 resultadosActivos = false;
             } else if (resultadosActivos == true && terminoJuego == true){
-                console.log("Evento emitido");
                 this.socket.emit('finJuego', ganadorJuego);
                 resultadosActivos = false;
             }

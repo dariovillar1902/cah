@@ -1,11 +1,7 @@
 import Zone from '../helpers/zone.js';
-
 import io from 'socket.io-client';
-
 import Dealer from '../helpers/dealer.js';
-
 import WebFontFile from '../helpers/WebFontFile';
-
 import Votacion from "../scenes/votacion";
 
 var text;
@@ -38,10 +34,6 @@ export default class Game extends Phaser.Scene {
         this.load.html("iconoluna", "iconoluna.html");
         this.load.html("iconomenu", "iconomenu.html");
         this.load.html("iconomezcla", "iconomezcla.html");
-        this.load.html("iconoautoblanco", "iconoautoblanco.html");
-        this.load.html("iconolunablanco", "iconolunablanco.html");
-        this.load.html("iconomenublanco", "iconomenublanco.html");
-        this.load.html("iconomezclablanco", "iconomezclablanco.html");
     }
 
     create() {
@@ -57,9 +49,7 @@ export default class Game extends Phaser.Scene {
         var nombres = sessionStorage.getItem("nombresJugadores").split(",");
         modoAuto = sessionStorage.getItem("modoAuto");
         modoClaro = sessionStorage.getItem("modoClaro");
-        console.log(modoAuto);
         var cantidadDeCartasJugadas = 0;
-        console.log(mezclaActivada);
         
         var arrayCartasNegras = ["La normativa de la Secretaria de Transporte ahora prohibe _________ en los aviones.", 
         "Es una pena que hoy en día los jóvenes se están metiendo con _________.", 
@@ -153,7 +143,6 @@ export default class Game extends Phaser.Scene {
         for (var i=0; i < nombres.length - 1; i++){
             this.opponentCards[i] = [];
         }
-        console.log(this.opponentCards[2]);
         this.cartasJugadasDeOponentes = [];
         var textoRonda = this.add.text(1150, 20, "Ronda", {fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 'bold' });
         textoRonda.setText("Ronda " + numeroRonda);
@@ -192,11 +181,9 @@ export default class Game extends Phaser.Scene {
             }
         }, self); 
         self.mezclarCartas.on('pointerdown', function (pointer) {
-            console.log("Mezcla clickeada");
             if (cantidadMezclas < 3 && mezclaActivada == false){
                 cantidadMezclas += 1;
                 sessionStorage.setItem("cantidadMezclas", cantidadMezclas);
-                console.log(cantidadMezclas);
                 self.mezclarCartas.node.children[2].style.backgroundColor = "white";
                 self.mezclarCartas.node.children[2].style.color = "black";
                 self.mezclarCartas.disableInteractive();
@@ -218,7 +205,6 @@ export default class Game extends Phaser.Scene {
             }
         }, self);
                 self.menuJuego.on('pointerdown', function (pointer) {
-                    console.log("Menú activado");
                     if (menuDesplegado === false){
                         menuDesplegado = true;
                         self.modoClaro.node.children[2].style.visibility = "visible";
@@ -266,15 +252,11 @@ export default class Game extends Phaser.Scene {
                     }
                 }
                 self.dealer.cartaReemplazo(xCartaJugada, yCartaJugada, textoCartaReemplazo);
-                // cartaJugada = false;
             } else if (cartaJugada == false && nombreJugador == nombres[sessionStorage.getItem("idJugador")]){
                 repeticionReemplazo += 1;
-                console.log(repeticionReemplazo);
-                console.log("Hola hola hola");
                 var textoCartaReemplazo = arrayCartasBlancas[indiceCartaBlanca];
                 cartasBlancasDeJugador[repeticionReemplazo-1] = textoCartaReemplazo;
                 self.children.list[3+repeticionReemplazo].input.enabled = false;
-                console.log(self.children.list[3+repeticionReemplazo]);
                 self.children.list[3+repeticionReemplazo].visible = false;
                 xCartaJugada = self.children.list[3+repeticionReemplazo].x;
                 yCartaJugada = self.children.list[3+repeticionReemplazo].y;
@@ -284,13 +266,8 @@ export default class Game extends Phaser.Scene {
 
         this.socket.on('cartaJugadaPorOponente', function () {
             self.dealer.cartaJugadaPorOponente(cantidadDeCartasJugadas);
-            console.log("Alguien jugó una carta");
             cantidadDeCartasJugadas += 1;
             textoJugadores.setText(nombres.length - cantidadDeCartasJugadas + "/" + nombres.length + " restantes");
-            console.log(cantidadDeCartasJugadas + "cartas jugadas");
-            if (cantidadDeCartasJugadas == nombres.length - 1){
-                console.log("Todos jugaron sus cartas");
-            }
         })
 
         this.zone = new Zone(this);
@@ -524,7 +501,6 @@ export default class Game extends Phaser.Scene {
         });
         this.socket.on('rondaTerminada', function (ordenJugadoresEnRonda, cartasJugadasEnRonda, horaInicialRondaVotacion) {
             keyVotacion = 'Votacion' + numeroRonda; 
-            console.log(keyVotacion);
             self.scene.add(keyVotacion, Votacion, true);
             sessionStorage.setItem("ordenJugadoresEnRonda", ordenJugadoresEnRonda);
             sessionStorage.setItem("cartasJugadasEnRonda", cartasJugadasEnRonda);
@@ -535,30 +511,21 @@ export default class Game extends Phaser.Scene {
         })
 
         var activacionDeMezcla = function(){
-            console.log("Mezcla de cartas activa");
             var textoCartaMezclada;
             for (var i=0; i<10; i++){
-                console.log(self.children.list[4+i]);
                 self.children.list[4+i].input.enabled = false;
-                    console.log(cartasBlancasDeJugador[i]);
                     var textoCartaMezclada = self.children.list[4+i].node.children[0].children[0].innerText;
                     self.socket.emit('cartasMezcladas', nombreJugador, textoCartaMezclada);
                 }
             }
 
         if (modoAuto == 'true' && cartaJugada == false){
-            console.log("Modo automatico activo");
             var indiceDeCartaJugadaAuto = Math.floor(Math.random() * 9);
-            console.log(indiceDeCartaJugadaAuto);
             for (var i=0; i<10; i++){
-                console.log(self.children.list[4+i]);
                 self.children.list[4+i].input.enabled = false;
                 if (i === indiceDeCartaJugadaAuto){
-                    console.log(cartasBlancasDeJugador[i]);
                     xCartaJugada = self.children.list[4+i].x;
                     yCartaJugada = self.children.list[4+i].y;
-                    console.log(xCartaJugada);
-                    console.log(yCartaJugada);
                     self.children.list[4+i].x = 625;
                     self.children.list[4+i].y = 375;
                     textoCartaElegida = self.children.list[4+i].node.children[0].children[0].innerText;
@@ -570,9 +537,7 @@ export default class Game extends Phaser.Scene {
             sessionStorage.setItem("textoCartaElegida", textoCartaElegida);
             self.socket.emit('cardPlayed', nombreJugador, textoCartaElegida);
             cartaJugada = true;
-        } else {
-            console.log("Modo automático inactivo");
-        }
+        } 
     }
     
     update() {

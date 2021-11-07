@@ -35,8 +35,6 @@ export default class Votacion extends Phaser.Scene {
         numeroRonda = sessionStorage.getItem("numeroRonda");
         modoAuto = sessionStorage.getItem("modoAuto");
         modoClaro = sessionStorage.getItem("modoClaro");
-        console.log(modoAuto);
-        console.log("Ronda " + numeroRonda);
         votacionActiva = true;
         votacionRealizada = false;
         let self = this;
@@ -53,8 +51,6 @@ export default class Votacion extends Phaser.Scene {
         }
         var ordenJugadoresEnRonda = sessionStorage.getItem("ordenJugadoresEnRonda").split(",");
         var cartasJugadasEnRonda = sessionStorage.getItem("cartasJugadasEnRonda").split(",");
-        console.log(ordenJugadoresEnRonda);
-        console.log(cartasJugadasEnRonda);
         var textoRonda = this.add.text(1150, 20, "Ronda", {fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 'bold' });
         textoRonda.setText("Ronda " + numeroRonda);
         var textoJugadores = this.add.text(1150, 40, "", {fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 'bold' });
@@ -79,7 +75,6 @@ export default class Votacion extends Phaser.Scene {
         cartaNegraFinal.node.children[0].children[0].innerText = sessionStorage.getItem("textoCartaNegra");
         self.menuJuego = self.add.dom(1240, 740).createFromCache('iconomenu').setInteractive();
         self.modoClaro = self.add.dom(1240, 620).createFromCache('iconoluna').setInteractive();
-        //self.mezclarCartas = self.add.dom(1240, 620).createFromCache('iconomezcla').setInteractive();
         self.modoAuto = self.add.dom(1240, 680).createFromCache('iconoauto').setInteractive(); 
         self.modoClaro.on('pointerdown', function (pointer) {
             if (modoClaro == 'true'){
@@ -94,9 +89,6 @@ export default class Votacion extends Phaser.Scene {
                 self.modoClaro.node.children[2].style.color = "black";
             }
         }, self); 
-        //self.mezclarCartas.on('pointerdown', function (pointer) {
-         //   console.log("Mezcla de cartas activada");
-        //}, self); 
         self.modoAuto.on('pointerdown', function (pointer) {
             if (modoAuto == 'true'){
                 modoAuto = 'false';
@@ -111,13 +103,10 @@ export default class Votacion extends Phaser.Scene {
             }
         }, self);
                 self.menuJuego.on('pointerdown', function (pointer) {
-                    console.log("Menú activado");
                     if (menuDesplegado === false){
                         menuDesplegado = true;
                         self.modoClaro.node.children[2].style.visibility = "visible";
                         self.modoClaro.setInteractive();
-                        //self.mezclarCartas.node.children[2].style.visibility = "visible";
-                        //self.mezclarCartas.setInteractive();
                         self.modoAuto.node.children[2].style.visibility = "visible"; 
                         self.modoAuto.setInteractive();
                         if (modoClaro == 'true'){
@@ -137,10 +126,8 @@ export default class Votacion extends Phaser.Scene {
                     } else {
                         menuDesplegado = false;
                         self.modoClaro.node.children[2].style.visibility = "hidden";
-                        //self.mezclarCartas.node.children[2].style.visibility = "hidden";
                         self.modoAuto.node.children[2].style.visibility = "hidden";
                         self.modoClaro.disableInteractive();
-                        //self.mezclarCartas.disableInteractive();
                         self.modoAuto.disableInteractive();
                     }
                 }, self);
@@ -170,8 +157,6 @@ export default class Votacion extends Phaser.Scene {
             font-weight: bold;
             font-size: 1.3em;
             line-height: 1.3em;'> </p> </div>`;
-            console.log(Math.trunc(i/4));
-            console.log(375-(200*Math.trunc(i/4)));
             if (nombres.length <= 4){
                 if (cartasJugadasEnRonda[i] == sessionStorage.getItem("textoCartaElegida")) {
                     cartaBlancaFinal[i] = this.add.dom(425 + i*200, 375).createFromHTML(cartaDeJugador).setScale(0.7, 0.7);
@@ -191,7 +176,6 @@ export default class Votacion extends Phaser.Scene {
             cartaBlancaFinal[i].on('pointerdown', function (pointer) {
                 if (pointer.downElement.innerText !== ""){
                     if (votacionRealizada == false){
-                        console.log(pointer.downElement.innerText);
                         cartaVotada = pointer.downElement.innerText;
                         votacionRealizada = true;
                         self.socket.emit('votoEmitido', cartaVotada, nombreJugador);
@@ -206,9 +190,6 @@ export default class Votacion extends Phaser.Scene {
         this.socket.on('votoEmitidoPorOponente', function () {
             cantidadDeVotosEmitidos += 1;
             textoJugadores.setText(nombres.length - cantidadDeVotosEmitidos + "/" + nombres.length + " restantes");
-            if (cantidadDeVotosEmitidos == nombres.length - 1){
-                console.log("Todos votaron");
-            }
         })
 
         self.input.keyboard.on('keydown-' + 'ONE', function (event) { 
@@ -327,11 +308,7 @@ export default class Votacion extends Phaser.Scene {
             while (ordenJugadoresEnRonda[indiceDeCartaVotadaAuto] === nombreJugador){
                 indiceDeCartaVotadaAuto = Math.floor(Math.random() * (ordenJugadoresEnRonda.length));
             }
-            console.log(indiceDeCartaVotadaAuto);
-            console.log(self.children.list);
             for (var i=0; i<ordenJugadoresEnRonda.length; i++){
-                console.log(i);
-                console.log(self.children.list[7+i]);
                 if (self.children.list[7+i].input){
                     self.children.list[7+i].input.enabled = false;
                 }
@@ -339,14 +316,11 @@ export default class Votacion extends Phaser.Scene {
                     cartaVotada = self.children.list[7+i].node.children[0].children[0].innerText;
                     self.socket.emit('votoEmitido', cartaVotada, nombreJugador);
                     var textoGanador = self.add.text(600, 600, "Voto automático", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
-                    console.log(cartaVotada);
                     cantidadDeVotosEmitidos += 1;
                     textoJugadores.setText(nombres.length - cantidadDeVotosEmitidos + "/" + nombres.length + " restantes");
                 }
             }
             votacionRealizada = true;
-        } else {
-            console.log("Modo automático inactivo");
         }
 
     }

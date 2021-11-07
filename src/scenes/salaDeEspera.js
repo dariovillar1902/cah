@@ -1,11 +1,8 @@
 import io from 'socket.io-client';
-
 import WebFontFile from '../helpers/WebFontFile';
-
 import Phaser from "phaser";
 import Game from "../scenes/game";
 import Opciones from "../scenes/opciones";
-const path = require('path');
 
 var salaIniciada = false;
 var menuDesplegado = false;
@@ -29,26 +26,21 @@ export default class salaDeEspera extends Phaser.Scene {
         this.load.html("iconomenu", "iconomenu.html");
         this.load.html("iconomezcla", "iconomezcla.html");
     }
-    // hdpjuego.herokuapp.com:36655
+
     create() {
         let self = this;
-        console.log("Hola");
         this.socket = io.connect();
         inicioJuego = false;
-        console.log(this.socket);
         this.socket.on('isPlayerA', function () {
         	self.isPlayerA = true;
-            console.log("Anfitrion");
             var formularioNombre = "<div style='display: flex; flex-direction: column'><input type='text' placeholder='Ingresar nombre' style='background-color: black;color: white;border: 1px solid white;border-radius: 1em;width: 500px;height: 70px;font-family: sans-serif;font-size: 30px;text-align: center; margin: 10px 0'></div>";
             var botonConfirmar ="<div style='display: flex; flex-direction: column'><input type='button' value='Crear sala' id='botonEntrar' style='background-color: black;color: white;border: 1px solid white;border-radius: 1em;width: 500px;height: 70px;font-family: sans-serif;font-size: 30px;text-align: center;'></div>";
-            // var botonConfirmar2 ="<form style='display: flex; flex-direction: column'><input type='button' value='Unirse a una sala' id='botonEntrar' style='background-color: black;color: white;border: 1px solid white;border-radius: 1em;width: 500px;height: 70px;font-family: sans-serif;font-size: 30px;text-align: center;'></form>";
             var botonConfirmar2 ="<div style='display: flex; flex-direction: column'><input type='button' value='Opciones de juego' id='botonEntrar' style='background-color: black;color: white;border: 1px solid white;border-radius: 1em;width: 500px;height: 70px;font-family: sans-serif;font-size: 30px;text-align: center;'></div>";
             var ingresarNombre = self.add.dom(640, 50).createFromHTML(formularioNombre);
             self.startBtn = self.add.dom(640, 150).createFromHTML(botonConfirmar).setInteractive();
             self.startBtn2 = self.add.dom(640, 250).createFromHTML(botonConfirmar2).setInteractive();
             self.scene.add('Opciones', Opciones, false);
-            // self.startBtn3 = self.add.dom(640, 450).createFromHTML(botonConfirmar3).setInteractive();
-            self.startBtn.on('pointerdown', function (pointer) {
+            self.startBtn.on('pointerdown', function () {
                 if (salaIniciada == false){
                     var nombreJugador = ingresarNombre.node.children[0].children[0].value;
                     sessionStorage.setItem("nombre", nombreJugador);
@@ -61,10 +53,10 @@ export default class salaDeEspera extends Phaser.Scene {
                     salaIniciada = false;
                 }
             }, self); 
-            self.startBtn2.on('pointerdown', function (pointer) {
+            self.startBtn2.on('pointerdown', function () {
                 self.scene.switch('Opciones');
             }, self); 
-            self.input.keyboard.on('keydown-' + 'ENTER', function (event) {
+            self.input.keyboard.on('keydown-' + 'ENTER', function () {
                 if (salaIniciada == false){
                     var nombreJugador = ingresarNombre.node.children[0].children[0].value;
                     sessionStorage.setItem("nombre", nombreJugador);
@@ -81,16 +73,14 @@ export default class salaDeEspera extends Phaser.Scene {
         })
 
         this.socket.on('otroJugador', function () {
-            if(self.isPlayerA && inicioJuego == false) {
-                console.log("Se unió otro jugador");
-            } else if (inicioJuego == false) {
+           if (inicioJuego == false && self.isPlayerA == false) {
                 var formularioNombre = "<div style='display: flex; flex-direction: column'><input type='text' placeholder='Ingresar nombre' style='background-color: black;color: white;border: 1px solid white;border-radius: 1em;width: 500px;height: 70px;font-family: sans-serif;font-size: 30px;text-align: center; margin: 10px 0'></div>";
                 var formularioNombre2 = "<div style='display: flex; flex-direction: column'><input type='text' placeholder='Ingresar código de sala' style='background-color: black;color: white;border: 1px solid white;border-radius: 1em;width: 500px;height: 70px;font-family: sans-serif;font-size: 30px;text-align: center; margin: 10px 0'></div>";
                 var botonConfirmar ="<div style='display: flex; flex-direction: column'><input type='button' value='Entrar a sala' id='botonEntrar' style='background-color: black;color: white;border: 1px solid white;border-radius: 1em;width: 500px;height: 70px;font-family: sans-serif;font-size: 30px;text-align: center;'></div>";
                 var ingresarNombre = self.add.dom(640, 50).createFromHTML(formularioNombre);
                 var ingresarNombre2 = self.add.dom(640, 150).createFromHTML(formularioNombre2);
                 self.startBtn = self.add.dom(640, 250).createFromHTML(botonConfirmar).setInteractive();
-                self.startBtn.on('pointerdown', function (pointer) {
+                self.startBtn.on('pointerdown', function () {
                     if (nombreIngresado == false && ingresarNombre.node.children[0].children[0].value !== ""){
                     var nombreJugador = ingresarNombre.node.children[0].children[0].value;
                     sessionStorage.setItem("nombre", nombreJugador);
@@ -99,7 +89,7 @@ export default class salaDeEspera extends Phaser.Scene {
                     nombreIngresado = true;
                     }
                 }, self); 
-                self.input.keyboard.on('keydown-' + 'ENTER', function (event) { 
+                self.input.keyboard.on('keydown-' + 'ENTER', function () { 
                     if (nombreIngresado == false && ingresarNombre.node.children[0].children[0].value !== ""){
                         var nombreJugador = ingresarNombre.node.children[0].children[0].value;
                         sessionStorage.setItem("nombre", nombreJugador);
@@ -114,9 +104,8 @@ export default class salaDeEspera extends Phaser.Scene {
         self.add.text(400, 350, "En la sala", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         self.menuJuego = self.add.dom(1240, 740).createFromCache('iconomenu').setInteractive();
         self.modoClaro = self.add.dom(1240, 620).createFromCache('iconoluna').setInteractive();
-        // self.mezclarCartas = self.add.dom(1240, 620).createFromCache('iconomezcla').setInteractive();
         self.modoAuto = self.add.dom(1240, 680).createFromCache('iconoauto').setInteractive(); 
-        self.modoClaro.on('pointerdown', function (pointer) {
+        self.modoClaro.on('pointerdown', function () {
             if (modoClaro == 'true'){
                 modoClaro = 'false';
                 sessionStorage.setItem("modoClaro", modoClaro);
@@ -129,10 +118,7 @@ export default class salaDeEspera extends Phaser.Scene {
                 self.modoClaro.node.children[2].style.color = "black";
             }
         }, self); 
-        //self.mezclarCartas.on('pointerdown', function (pointer) {
-          //  console.log("Mezcla de cartas activada");
-        //}, self); 
-        self.modoAuto.on('pointerdown', function (pointer) {
+        self.modoAuto.on('pointerdown', function () {
             if (modoAuto == 'true'){
                 modoAuto = 'false';
                 sessionStorage.setItem("modoAuto", modoAuto);
@@ -145,14 +131,12 @@ export default class salaDeEspera extends Phaser.Scene {
                 self.modoAuto.node.children[2].style.color = "black";
             }
         }, self);
-                self.menuJuego.on('pointerdown', function (pointer) {
+                self.menuJuego.on('pointerdown', function () {
                     console.log("Menú activado");
                     if (menuDesplegado === false){
                         menuDesplegado = true;
                         self.modoClaro.node.children[2].style.visibility = "visible";
                         self.modoClaro.setInteractive();
-                        //self.mezclarCartas.node.children[2].style.visibility = "visible";
-                        //self.mezclarCartas.setInteractive();
                         self.modoAuto.node.children[2].style.visibility = "visible"; 
                         self.modoAuto.setInteractive();
                         if (modoClaro == 'true'){
@@ -172,10 +156,8 @@ export default class salaDeEspera extends Phaser.Scene {
                     } else {
                         menuDesplegado = false;
                         self.modoClaro.node.children[2].style.visibility = "hidden";
-                        //self.mezclarCartas.node.children[2].style.visibility = "hidden";
                         self.modoAuto.node.children[2].style.visibility = "hidden";
                         self.modoClaro.disableInteractive();
-                        //self.mezclarCartas.disableInteractive();
                         self.modoAuto.disableInteractive();
                     }
                 }, self);
@@ -205,15 +187,7 @@ export default class salaDeEspera extends Phaser.Scene {
                 sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
                 sessionStorage.setItem("horaInicio", horaInicial);
                 sessionStorage.setItem("numeroRonda", numeroRonda);
-               
-                console.log("Instancia 1 iniciada");
         })
         
     }
-    
-    update() {
-
-    }
-
-
 }
