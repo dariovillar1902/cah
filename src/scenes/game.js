@@ -577,7 +577,7 @@ export default class Game extends Phaser.Scene {
     
     update() {
         var horaActual = new Date().getTime();
-        var diferenciaS = (horaActual - horaInicio)/6000;
+        var diferenciaS = (horaActual - horaInicio)/1000;
         var segundosRestantes = 60 - diferenciaS;
         if (segundosRestantes >= 10) {
             text.setText(segundosRestantes.toString().substr(0, 2));
