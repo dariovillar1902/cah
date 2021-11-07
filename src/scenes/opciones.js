@@ -33,12 +33,12 @@ export default class Opciones extends Phaser.Scene {
 
     preload() {
         this.load.addFile(new WebFontFile(this.load, 'Work Sans'));
-        this.load.html("iconoauto", "/src/assets/iconomas.html");
-        this.load.html("iconoluna", "/src/assets/iconoluna.html");
-        this.load.html("iconomenu", "/src/assets/iconomenu.html");
-        this.load.html("iconomezcla", "/src/assets/iconomezcla.html");
-        this.load.html("iconomas", "/src/assets/iconomas.html");
-        this.load.html("iconomenos", "/src/assets/iconomenos.html");
+        this.load.html("iconoauto", "iconoauto.html");
+        this.load.html("iconoluna", "iconoluna.html");
+        this.load.html("iconomenu", "iconomenu.html");
+        this.load.html("iconomezcla", "iconomezcla.html");
+        this.load.html("iconomas", "iconomas.html");
+        this.load.html("iconomenos", "iconomenos.html");
     }
 
     create() {
