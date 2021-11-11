@@ -1,171 +1,56 @@
-# The Witcher
+# HDP Juego
 
-<h1 align="center"><img src="./src/assets/img/the_witcher_text.png"></h1>
+Versión del juego Cards Against Humanity/Hasta Donde Puedas en español.
 
-This is Microverse's final project in Javascript's course.
+Construida utilizando [Phaser 3](https://phaser.io/), framework de JavaScript para juegos de formato open-source, Node.js, Express, WebSockets a través de [Socket.IO](https://socket.io/) para interacción en tiempo real, [Heroku](https://www.heroku.com/platform) para deploy y lanzamiento público.
 
-In this project, I build a shooter game using JavaScript's framework [Phaser 3](https://phaser.io/), a "fast,free and fun open-source framework for Canvas and WebGL powered browser games".
+# Descripción
 
-# Description
+Versión online del popular juego de cartas Cards Against Humanity/Hasta Donde Puedas. El juego es, principalmente, de humor negro, y contiene cartas ofensivas de todo tipo, por lo que no es para tomárselo tan en serio (ni jugarlo con gente que se puede ofender fácilmente)!
 
-This is an original shooter game built from scratch using Phaser 3 and vanilla Javascript OOP best practices. The game is called The Witcher.
+# El Juego
 
-# The Game
+Al principio del juego, a la persona que ingresa primero se le da la opción de iniciar una sala y ser anfitrión. Una vez iniciada la sala, puede modificar distintos aspectos del juego desde la pestaña de Opciones. Al entrar nuevos participantes, aparecerán en la lista de la sala en tiempo real al ingresar su nombre. 
 
-The Witcher is a slightly different shooter game in which enemies will spawn from the top and the right side of the game canvas. The main character 'Pipoya' fights in the 'Magic Cliff' to prevent monsters to enter her world. You control Pipoya's movement with the **arrow keys** while shooting arrows with **space** and **jumping with the up arrow key**. Defeat as many enemies as you can before you run out of health or time!
+Una vez que están todos los participantes, el juego comienza. A cada jugador se le reparten 10 cartas blancas al azar, cada una con una frase ocurrente o divertida. Luego, para una misma carta negra con una sentencia para completar, los jugadores deben elegir la carta blanca que genere la oración más graciosa al combinarla con la carta negra.
 
-You get points after killing an enemy. Each enemy will give a different fixed number of points. You'll also receive extra time after killing an enemy.
+Al final de cada ronda, se muestran todas las cartas y el jugador puede votar por una de ellas (no puede votar por su propia carta). La carta que recibe más votos obtiene un punto, y el primer jugador que llega a 5 puntos gana el juego.
 
-In the end, you can enter your name on the leaderboard and check the highest scores.
+Otras funciones: posibilidad de activar modo automático (juega y vota automáticamente en cada ronda), mezclar todas las cartas hasta 3 veces en una misma partida, activar modo claro u oscuro.
 
-# Live version
-[Play it online here](https://agile-mesa-29255.herokuapp.com/)
+# Versión de juego
+[Jugar a HASTA DONDE PUEDAS online](https://hdpjuego.herokuapp.com/)
 
-## How to play
+## Cómo jugar
 
-- Use the **right and left arrow keys** to move Pipoya around the map.
-- Use the **up arrow key** to jump to evade enemy attacks.
-- Use the **space bar** to shoot Pipoya's arrows.
+- Con mouse: **Drag and drop** sobre las cartas con el mouse, luego en la votación **hacer click** sobre la carta que el jugador piense más graciosa.
 
-You can play the game online clicking [here](https://agile-mesa-29255.herokuapp.com/) or locally following these steps:
+- Con teclado: **Números del 1 al 0** para elegir la carta en la posición correspondiente durante el juego, luego **números de 1 a X (siendo X la cantidad de jugadores)** para elegir la carta correspondiente en la votación.
 
-* Click on the green button "Clone or Download"
-* Click on Download ZIP
-* Extract the game
-* In your terminal, navigate to the game's folder
-* Run 'node server.js'
-* Open, in your browser, 'localhost:8080'
-* Beat my record and make my name disappear from the Leader Board
+# Tareas Futuras
 
-## Design
-
-The game uses high-quality sprites to bring all scenes to life. You can expect well-designed animations and map textures. I used [this](https://pipoya.itch.io/) sprite pack for animating heroes and enemies Game Objects and [this one](https://ansimuz.itch.io/magic-cliffs-environment) for rendering the map.
-
-### Pipoya
-
-<div>
-<div style="width: 200px">
-<img style="float:left" height="100" src="./src/assets/img/hero/pipoya_hero.png">
-</div>
-- Role: Main Character </br>
-- Health: 100 </br>
-- Damage: 10 </br>
-- Weapon: Arrow </br>
-
-</div>
-
-### Droppy
-
-<div>
-<div style="width: 200px">
-<img style="float:left" height="100" src="./src/assets/img/enemy/enemy1/droppy.png">
-</div>
-- Role: Enemy </br>
-- Health: 20 </br>
-- Damage: 5 </br>
-- Weapon: No Weapon </br>
-- Points: 40 </br>
-
-</div>
-
-### Wolfy
-
-<div>
-
-<div style="width: 200px; display: block; height 100px;">
-
-<img style="float:left" height="100" src="./src/assets/img/enemy/enemy2/wolfy.png">
-</div>
-- Role: Enemy </br>
-- Health: 50 </br>
-- Damage: 10 </br>
-- Weapon: No Weapons </br>
-- Points: 90 </br>
-Tip : Don't fight this guy if you want to remain alive.
-</div>
-
-</div>
-
-### Ogre
-
-<div>
-<div style="width: 200px">
-<img style="float:left" height="100" src="./src/assets/img/enemy/enemy3/Ogre.png">
-</div>
-- Role: Enemy </br>
-- Health: 200 </br>
-- Damage: 30 </br>
-- Weapon: Mace </br>
-- Points: 100 </br>
-
-</div>
-
-## Scenes
-
-### Main Menu
-
-![Main Menu](./src/assets/img/scenes/main_menu.png)
-
-### Play
-
-![Play Scene](./src/assets/img/scenes/main_scene.png)
-
-### Game Over
-
-![Game Over Scene](./src/assets/img/scenes/game_over_scene.png)
-
-### Leaderboard
-
-![Leaderboard scene](./src/assets/img/scenes/leaderboard_scene.png)
-
-# Built With
-
-- JavaScript
-- A bit of HTML and CSS for the front end
-- Phaser 3
-- Webpack
-- Eslint
-- Stylelint
-- Babel
-- Jest
-- Express
-- Node
-- ES6
-- NPM
-- Github
-- [Heroku](https://www.heroku.com/) for the deployment
-- Leaderboard API service
-
-## NPM available scripts
-Use "npm run-script " followed by any of the following commands : 
-
-- "build": "webpack --mode production"
-- "watch": "webpack --mode development --watch"
-- "test": "jest"
-
-# Future Work
-
-- Add MMORPG functionality
-- Add Music
-- Make a mobile version
-- Develop the lore
-- Add more complex levels and worlds
+- Añadir salas con códigos alfanuméricos
+- Añadir más opciones de juego
+- Optimizar tiempos de carga del juego
+- Optimizar el juego para dispositivos móviles
+- Agregar más cartas
 
 ## Contact
 
-👤 **Diego Antonio Reyes Coronado**
+👤 **Darío Villar**
 
-- Github: [@xtrmdarc](https://github.com/xtrmdarc)
-- Twitter: [@diegoreyesco](https://twitter.com/DiegoAn91629127)
-- Linkedin: [diegoreyesco](https://www.linkedin.com/in/diego-reyes-coronado)
+- Github: [@dariovillar1902](https://github.com/dariovillar1902)
+- Linkedin: [dario-villar](https://www.linkedin.com/in/dario-villar/)
 
-## 🤝 Contributing
+## 🤝 Contribuciones
+
+Contribuciones de todo tipo son bienvenidas!
 
 Contributions, issues and feature requests are welcome!
 
-Feel free to check the [issues page](https://github.com/xtrmdarc/the-witcher/issues).
+Chequear la [página de issues](https://github.com/dariovillar1902/cah/issues) para más información.
 
-## Show your support
+## Mostrar apoyo
 
-Give a ⭐️ if you like this project!
+⭐️ si te gusta el proyecto!
 
