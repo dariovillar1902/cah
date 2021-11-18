@@ -4,6 +4,12 @@ Versión del juego Cards Against Humanity/Hasta Donde Puedas en español.
 
 Construida utilizando [Phaser 3](https://phaser.io/), framework de JavaScript para juegos de formato open-source, Node.js, Express, WebSockets a través de [Socket.IO](https://socket.io/) para interacción en tiempo real, [Heroku](https://www.heroku.com/platform) para deploy y lanzamiento público.
 
+![Screenshot1](https://github.com/dariovillar1902/cah/blob/master/1.png?raw=true)
+![Screenshot2](https://github.com/dariovillar1902/cah/blob/master/2.png?raw=true)
+![Screenshot3](https://github.com/dariovillar1902/cah/blob/master/3.png?raw=true)
+![Screenshot4](https://github.com/dariovillar1902/cah/blob/master/4.png?raw=true)
+![Screenshot5](https://github.com/dariovillar1902/cah/blob/master/5.png?raw=true)
+
 # Descripción
 
 Versión online del popular juego de cartas Cards Against Humanity/Hasta Donde Puedas. El juego es, principalmente, de humor negro, y contiene cartas ofensivas de todo tipo, por lo que no es para tomárselo tan en serio (ni jugarlo con gente que se puede ofender fácilmente)!
