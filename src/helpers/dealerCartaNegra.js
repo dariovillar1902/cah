@@ -71,13 +71,13 @@ export default class Dealer {
                 scene.opponentCards.push(opponentCard.render(175 + (i * 100), 125, opponentSprite).disableInteractive());
             }
         },
-        this.cartaReemplazo = (x, y) => {
-            console.log("Activado")
-            let playerSprite;
-            let opponentSprite;
+            this.cartaReemplazo = (x, y) => {
+                console.log("Activado")
+                let playerSprite;
+                let opponentSprite;
 
-            if (scene.isPlayerA) {
-                playerSprite = `<div style='
+                if (scene.isPlayerA) {
+                    playerSprite = `<div style='
                 background-color: white;
                 color: black;
                 border: 1px solid black;
@@ -89,7 +89,7 @@ export default class Dealer {
                 font-weight: bold;
                 font-size: 1.3em;
                 line-height: 1.3em;'> a </p> </div>`;
-                opponentSprite = `<div style='
+                    opponentSprite = `<div style='
                 background-color: white;
                 color: black;
                 border: 1px solid black;
@@ -104,8 +104,8 @@ export default class Dealer {
                 font-size: 4em; 
                 vertical-align: middle; 
                 margin: auto !important;'> HDP </p> </div>`;
-            } else {
-                playerSprite = `<div style='
+                } else {
+                    playerSprite = `<div style='
                 background-color: white;
                 color: black;
                 border: 1px solid black;
@@ -117,7 +117,7 @@ export default class Dealer {
                 font-weight: bold;
                 font-size: 1.3em;
                 line-height: 1.3em;'> a </p> </div>`;
-                opponentSprite = `<div style='
+                    opponentSprite = `<div style='
                 background-color: white;
                 color: black;
                 border: 1px solid black;
@@ -132,10 +132,10 @@ export default class Dealer {
                 font-size: 4em; 
                 vertical-align: middle; 
                 margin: auto !important;'> HDP </p> </div>`;
-            };
+                };
                 let playerCard = new Card(scene);
                 playerCard.render(x, y, playerSprite);
 
-        }
+            }
     }
 }

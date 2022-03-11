@@ -40,9 +40,9 @@ export default class Resultados extends Phaser.Scene {
         let self = this;
         this.socket = io.connect();
         jugadorGanador = sessionStorage.getItem("ganadorDeRonda");
-        var textoRonda = this.add.text(1150, 20, "Ronda", {fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 'bold' });
+        var textoRonda = this.add.text(1150, 20, "Ronda", { fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 'bold' });
         textoRonda.setText("Ronda " + numeroRonda);
-        text = this.add.text(55, 55, "10", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
+        text = this.add.text(55, 55, "10", { fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         var cartaNegraElegida = `<div style='
         background-color: black;
         color: white;
@@ -57,8 +57,8 @@ export default class Resultados extends Phaser.Scene {
         line-height: 1.3em;'> </p> </div>`;
         var cartaNegraFinal = this.add.dom(500, 300).createFromHTML(cartaNegraElegida).setScale(0.7, 0.7);
         cartaNegraFinal.node.children[0].children[0].innerText = sessionStorage.getItem("textoCartaNegra");
-        this.add.text(475, 100, "Ganó esta ronda: ", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
-        var nombreGanador = this.add.text(725, 100, "a", {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
+        this.add.text(475, 100, "Ganó esta ronda: ", { fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
+        var nombreGanador = this.add.text(725, 100, "a", { fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         nombreGanador.setText(jugadorGanador);
         var cartaBlanca = `<div style='
             background-color: white;
@@ -99,25 +99,25 @@ export default class Resultados extends Phaser.Scene {
             case 6:
                 xPuntuacion = 100;
                 break;
-        
+
             default:
                 xPuntuacion = 100;
                 break;
         }
-        for (var i = 0; i < nombres.length; i++){
-            if (puntos[i] === '3'){
+        for (var i = 0; i < nombres.length; i++) {
+            if (puntos[i] === '3') {
                 terminoJuego = true;
                 ganadorJuego = nombres[i];
             }
-            textosNombres[i] = this.add.text(xPuntuacion + (i-6*Math.trunc(i/6))*200, 525+(100*Math.trunc(i/6)), nombres[i], {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
-            textosPuntos[i] = this.add.text(xPuntuacion + 25 + (i-6*Math.trunc(i/6))*200, 575+(100*Math.trunc(i/6)), puntos[i], {fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
+            textosNombres[i] = this.add.text(xPuntuacion + (i - 6 * Math.trunc(i / 6)) * 200, 525 + (100 * Math.trunc(i / 6)), nombres[i], { fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
+            textosPuntos[i] = this.add.text(xPuntuacion + 25 + (i - 6 * Math.trunc(i / 6)) * 200, 575 + (100 * Math.trunc(i / 6)), puntos[i], { fontFamily: 'sans-serif', fontSize: '30px', fontWeight: 'bold' });
         }
         horaInicio = parseInt(sessionStorage.getItem("horaInicialRondaResultados"));
         self.menuJuego = self.add.dom(1240, 740).createFromCache('iconomenu').setInteractive();
         self.modoClaro = self.add.dom(1240, 620).createFromCache('iconoluna').setInteractive();
-        self.modoAuto = self.add.dom(1240, 680).createFromCache('iconoauto').setInteractive(); 
+        self.modoAuto = self.add.dom(1240, 680).createFromCache('iconoauto').setInteractive();
         self.modoClaro.on('pointerdown', function () {
-            if (modoClaro == 'true'){
+            if (modoClaro == 'true') {
                 modoClaro = 'false';
                 sessionStorage.setItem("modoClaro", modoClaro);
                 self.modoClaro.node.children[2].style.backgroundColor = "black";
@@ -128,9 +128,9 @@ export default class Resultados extends Phaser.Scene {
                 self.modoClaro.node.children[2].style.backgroundColor = "white";
                 self.modoClaro.node.children[2].style.color = "black";
             }
-        }, self); 
+        }, self);
         self.modoAuto.on('pointerdown', function () {
-            if (modoAuto == 'true'){
+            if (modoAuto == 'true') {
                 modoAuto = 'false';
                 sessionStorage.setItem("modoAuto", modoAuto);
                 self.modoAuto.node.children[2].style.backgroundColor = "black";
@@ -142,36 +142,36 @@ export default class Resultados extends Phaser.Scene {
                 self.modoAuto.node.children[2].style.color = "black";
             }
         }, self);
-                self.menuJuego.on('pointerdown', function () {
-                    if (menuDesplegado === false){
-                        menuDesplegado = true;
-                        self.modoClaro.node.children[2].style.visibility = "visible";
-                        self.modoClaro.setInteractive();
-                        self.modoAuto.node.children[2].style.visibility = "visible"; 
-                        self.modoAuto.setInteractive();
-                        if (modoClaro == 'true'){
-                            self.modoClaro.node.children[2].style.backgroundColor = "white";
-                            self.modoClaro.node.children[2].style.color = "black";
-                        } else {
-                            self.modoClaro.node.children[2].style.backgroundColor = "black";
-                            self.modoClaro.node.children[2].style.color = "white";
-                        }
-                        if (modoAuto == 'true'){
-                            self.modoAuto.node.children[2].style.backgroundColor = "white";
-                            self.modoAuto.node.children[2].style.color = "black";
-                        } else {
-                            self.modoAuto.node.children[2].style.backgroundColor = "black";
-                            self.modoAuto.node.children[2].style.color = "white";
-                        }
-                    } else {
-                        menuDesplegado = false;
-                        self.modoClaro.node.children[2].style.visibility = "hidden";
-                        self.modoAuto.node.children[2].style.visibility = "hidden";
-                        self.modoClaro.disableInteractive();
-                        self.modoAuto.disableInteractive();
-                    }
-                }, self);
-                
+        self.menuJuego.on('pointerdown', function () {
+            if (menuDesplegado === false) {
+                menuDesplegado = true;
+                self.modoClaro.node.children[2].style.visibility = "visible";
+                self.modoClaro.setInteractive();
+                self.modoAuto.node.children[2].style.visibility = "visible";
+                self.modoAuto.setInteractive();
+                if (modoClaro == 'true') {
+                    self.modoClaro.node.children[2].style.backgroundColor = "white";
+                    self.modoClaro.node.children[2].style.color = "black";
+                } else {
+                    self.modoClaro.node.children[2].style.backgroundColor = "black";
+                    self.modoClaro.node.children[2].style.color = "white";
+                }
+                if (modoAuto == 'true') {
+                    self.modoAuto.node.children[2].style.backgroundColor = "white";
+                    self.modoAuto.node.children[2].style.color = "black";
+                } else {
+                    self.modoAuto.node.children[2].style.backgroundColor = "black";
+                    self.modoAuto.node.children[2].style.color = "white";
+                }
+            } else {
+                menuDesplegado = false;
+                self.modoClaro.node.children[2].style.visibility = "hidden";
+                self.modoAuto.node.children[2].style.visibility = "hidden";
+                self.modoClaro.disableInteractive();
+                self.modoAuto.disableInteractive();
+            }
+        }, self);
+
         this.socket.on('iniciarRonda', function (indiceCartaNegra, horaInicial, numeroRonda) {
             sessionStorage.setItem("numeroCartaNegra", indiceCartaNegra);
             sessionStorage.setItem("horaInicio", horaInicial);
@@ -192,10 +192,10 @@ export default class Resultados extends Phaser.Scene {
         })
 
     }
-    
+
     update() {
         var horaActual = new Date().getTime();
-        var diferenciaS = (horaActual - horaInicio)/1000;
+        var diferenciaS = (horaActual - horaInicio) / 1000;
         var segundosRestantes = 10 - diferenciaS;
         if (segundosRestantes >= 10) {
             text.setText(segundosRestantes.toString().substr(0, 2));
@@ -205,11 +205,11 @@ export default class Resultados extends Phaser.Scene {
             if (resultadosActivos == true && terminoJuego == false) {
                 this.socket.emit('iniciarRonda');
                 resultadosActivos = false;
-            } else if (resultadosActivos == true && terminoJuego == true){
+            } else if (resultadosActivos == true && terminoJuego == true) {
                 this.socket.emit('finJuego', ganadorJuego);
                 resultadosActivos = false;
             }
-            
+
         }
     }
 
